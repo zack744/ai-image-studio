@@ -1,9 +1,9 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { eq, and, desc } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import { users } from "../db/schema";
-import { hashPassword, verifyPassword, createJWT } from "../auth";
-import type { DbType } from "../db";
+import { hashPassword, verifyPassword, createJWT, needsPasswordRehash } from "../auth";
+import type { AppEnv } from "../types";
 
 const registerSchema = z.object({
   email: z.string().email().max(255),
@@ -16,10 +16,10 @@ const loginSchema = z.object({
   password: z.string(),
 });
 
-export const authRoutes = new Hono<{ Bindings: Env }>();
+export const authRoutes = new Hono<AppEnv>();
 
 authRoutes.post("/register", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
 
   const body = await c.req.json();
   const parsed = registerSchema.safeParse(body);
@@ -58,7 +58,7 @@ authRoutes.post("/register", async (c) => {
 });
 
 authRoutes.post("/login", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
 
   const body = await c.req.json();
   const parsed = loginSchema.safeParse(body);
@@ -80,6 +80,13 @@ authRoutes.post("/login", async (c) => {
     return c.json({ error: "Invalid email or password" }, 401);
   }
 
+  if (needsPasswordRehash(user.passwordHash)) {
+    await db.update(users).set({
+      passwordHash: await hashPassword(password),
+      updatedAt: new Date().toISOString(),
+    }).where(eq(users.id, user.id));
+  }
+
   const token = await createJWT(user.id, c);
 
   return c.json({
@@ -92,4 +99,3 @@ authRoutes.post("/login", async (c) => {
     },
   });
 });
-

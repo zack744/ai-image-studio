@@ -471,7 +471,7 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 
 					if (shouldTriggerGeneration) {
 						// Fire and forget - don't await, let it run in background
-						chatService.createMessageGenerate({ generationId: assistantMessage!.generation!.id }).catch((error) => {
+						generateTrigger({ generationId: assistantMessage!.generation!.id }).catch((error) => {
 							console.error("Error triggering image generation:", error);
 						});
 					}
@@ -501,6 +501,7 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 		[
 			currentChatId,
 			sendMessageTrigger,
+			generateTrigger,
 			currentChatMutate,
 			createNewChat,
 			chatsMutate,
@@ -605,7 +606,7 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 				// Trigger image generation in browser (not blocked by server timeout)
 				if (result?.generationId) {
 					// Fire and forget - don't await, let it run in background
-					chatService.createMessageGenerate({ generationId: result.generationId }).catch((error) => {
+					generateTrigger({ generationId: result.generationId }).catch((error) => {
 						console.error("Error triggering image generation:", error);
 					});
 				}
@@ -638,7 +639,7 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 				setIsGenerating(false);
 			}
 		},
-		[chatService, currentChatId, currentChatMutate],
+		[regenerateTrigger, generateTrigger, currentChatId, currentChatMutate],
 	);
 
 	// Transform user data to match the expected format

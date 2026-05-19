@@ -8,7 +8,7 @@
 		"build": "tsc -b && vite build",
 		"analyze": "vite build --mode analyze",
 		"fmt": "biome format --write .",
-		"lint": "eslint .",
+		"lint": "biome lint .",
 		"preview": "vite preview"
 	},
 	"dependencies": {
@@ -35,6 +35,7 @@
 		"clsx": "^2.1.1",
 		"i18next": "^25.2.1",
 		"i18next-browser-languagedetector": "^8.1.0",
+		"input-otp": "^1.4.2",
 		"jszip": "^3.10.1",
 		"lucide-react": "^0.511.0",
 		"motion": "^12.17.0",

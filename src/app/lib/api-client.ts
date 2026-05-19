@@ -28,7 +28,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   };
 
   if (token) {
-    headers["Authorization"] = `Bearer ${token}`;
+    headers.Authorization = `Bearer ${token}`;
   }
 
   if (options.body && typeof options.body !== "string" && !(options.body instanceof FormData)) {
@@ -54,12 +54,15 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   }
   clear();
 
+  const data = await resp.json().catch(() => null);
+
   if (resp.status === 401) {
     clearToken();
-    throw new ApiError("unauthorized", "Session expired");
+    throw new ApiError(
+      "unauthorized",
+      data?.error || "Session expired",
+    );
   }
-
-  const data = await resp.json().catch(() => null);
 
   if (!resp.ok) {
     throw new ApiError(
@@ -188,7 +191,7 @@ async function uploadImage(file: File) {
   formData.append("file", file);
   const token = getToken();
   const headers: Record<string, string> = {};
-  if (token) headers["Authorization"] = `Bearer ${token}`;
+  if (token) headers.Authorization = `Bearer ${token}`;
 
   const { signal, clear } = createTimeoutSignal(60000); // 60s for large uploads
 
@@ -227,11 +230,7 @@ async function getImageUrl(id: string) {
 
 // AI Provider API
 async function getAiProviders() {
-  return request<any[]>("/api/chats").then(() => {
-    // For now, providers come from the local AI_PROVIDERS static config
-    // In the future, this can come from the Worker
-    return [];
-  });
+  return [];
 }
 
 export const apiClient = {

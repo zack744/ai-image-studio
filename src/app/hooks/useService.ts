@@ -20,6 +20,44 @@ function createSwrMutation<T, Arg = any>(
   return useSWRMutation(key, (_key: string | null, { arg }: { arg: Arg }) => fetcher(arg), config);
 }
 
+type ProviderOverride = {
+  enabled?: boolean;
+  settings?: Record<string, any>;
+  models?: Record<string, { enabled?: boolean }>;
+};
+
+const AI_PROVIDER_OVERRIDES_KEY = "typix_ai_provider_overrides";
+
+function readProviderOverrides(): Record<string, ProviderOverride> {
+  if (typeof localStorage === "undefined") return {};
+  try {
+    return JSON.parse(localStorage.getItem(AI_PROVIDER_OVERRIDES_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function writeProviderOverrides(overrides: Record<string, ProviderOverride>) {
+  if (typeof localStorage === "undefined") return;
+  localStorage.setItem(AI_PROVIDER_OVERRIDES_KEY, JSON.stringify(overrides));
+}
+
+function getProvidersWithOverrides() {
+  const overrides = readProviderOverrides();
+  return AI_PROVIDERS.map((provider) => {
+    const providerOverride = overrides[provider.id] || {};
+    return {
+      ...provider,
+      enabled: providerOverride.enabled ?? provider.enabledByDefault !== false,
+      settingsValues: providerOverride.settings || {},
+      models: provider.models.map((model) => ({
+        ...model,
+        enabled: providerOverride.models?.[model.id]?.enabled ?? model.enabledByDefault !== false,
+      })),
+    };
+  });
+}
+
 // Chat service (Worker API)
 const chatService = {
   getChats: {
@@ -68,23 +106,55 @@ const chatService = {
 
 // AI service (static providers + Worker API)
 const aiService = {
+  getAiProviders: {
+    swr: (key: string | null) => createSwr(key, async () => getProvidersWithOverrides()),
+  },
   getEnabledAiProvidersWithModels: {
     swr: (key: string | null) =>
       createSwr(key, async () => {
-        return AI_PROVIDERS.filter((p) => p.enabledByDefault !== false).map((p) => ({
-          ...p,
-          enabled: true,
-          models: p.models.filter((m) => m.enabledByDefault !== false).map((m) => ({ ...m, enabled: true })),
-        }));
+        return getProvidersWithOverrides()
+          .filter((provider) => provider.enabled)
+          .map((provider) => ({
+            ...provider,
+            models: provider.models.filter((model) => model.enabled),
+          }));
       }),
   },
   getAiProviderById: {
     swr: (key: string | null, params: { providerId: string }) =>
       createSwr(key, async () => {
-        const provider = AI_PROVIDERS.find((p) => p.id === params.providerId);
-        if (!provider) return null;
-        return { ...provider, enabled: provider.enabledByDefault !== false };
+        return getProvidersWithOverrides().find((provider) => provider.id === params.providerId) || null;
       }),
+  },
+  getAiModelsByProviderId: {
+    swr: (key: string | null, params: { providerId: string }) =>
+      createSwr(key, async () => {
+        return getProvidersWithOverrides().find((provider) => provider.id === params.providerId)?.models || [];
+      }),
+  },
+  updateAiProvider: async (params: { providerId: string; enabled?: boolean; settings?: Record<string, any> }) => {
+    const overrides = readProviderOverrides();
+    const current = overrides[params.providerId] || {};
+    overrides[params.providerId] = {
+      ...current,
+      enabled: params.enabled ?? current.enabled,
+      settings: params.settings ?? current.settings,
+    };
+    writeProviderOverrides(overrides);
+    return getProvidersWithOverrides().find((provider) => provider.id === params.providerId) || null;
+  },
+  updateAiModel: async (params: { providerId: string; modelId: string; enabled: boolean }) => {
+    const overrides = readProviderOverrides();
+    const current = overrides[params.providerId] || {};
+    overrides[params.providerId] = {
+      ...current,
+      models: {
+        ...(current.models || {}),
+        [params.modelId]: { enabled: params.enabled },
+      },
+    };
+    writeProviderOverrides(overrides);
+    return getProvidersWithOverrides().find((provider) => provider.id === params.providerId)?.models.find((model) => model.id === params.modelId) || null;
   },
 };
 

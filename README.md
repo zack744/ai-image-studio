@@ -64,6 +64,18 @@ cp worker/.dev.vars.example worker/.dev.vars
 # 编辑 worker/.dev.vars，填入 JWT_SECRET 和 SUCHUANG_API_KEY
 ```
 
+生产环境不要把密钥写入 `wrangler.toml`，请使用 Wrangler secrets：
+
+```bash
+cd worker
+wrangler secret put JWT_SECRET -e production
+wrangler secret put SUCHUANG_API_KEY -e production
+# 如需公开访问 R2 图片，也需要配置 R2_PUBLIC_URL
+wrangler secret put R2_PUBLIC_URL -e production
+```
+
+同时将 `worker/wrangler.toml` 中 D1 的 `database_id` 替换为 Cloudflare 控制台中的真实数据库 ID。
+
 4. **执行数据库迁移**
 
 ```bash

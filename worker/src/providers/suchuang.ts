@@ -46,11 +46,11 @@ function statusFromDetail(payload: any): number | null {
   if (typeof data === "object" && data !== null) {
     const s = data.status;
     if (typeof s === "number") return s;
-    if (typeof s === "string" && /^\d+$/.test(s)) return parseInt(s, 10);
+    if (typeof s === "string" && /^\d+$/.test(s)) return Number.parseInt(s, 10);
   }
   const code = payload?.code;
   if (typeof code === "number") return code;
-  if (typeof code === "string" && /^\d+$/.test(code)) return parseInt(code, 10);
+  if (typeof code === "string" && /^\d+$/.test(code)) return Number.parseInt(code, 10);
   return null;
 }
 
@@ -73,7 +73,7 @@ export const suchuangProvider: ImageProvider = {
         "Content-Type": "application/json",
         "Authorization": apiKey,
       },
-      body: JSON.stringify({ prompt, size }),
+      body: JSON.stringify({ prompt, size, n: options.n || 1 }),
     });
 
     if (!resp.ok) {
@@ -85,7 +85,7 @@ export const suchuangProvider: ImageProvider = {
     return extractTaskId(payload);
   },
 
-  async poll(taskId: string, apiKey: string): Promise<{ status: string; images?: string[]; error?: string }> {
+  async poll(taskId: string, apiKey: string): Promise<{ status: "pending" | "generating" | "completed" | "failed"; images?: string[]; error?: string }> {
     const url = `${DETAIL_URL}?key=${encodeURIComponent(apiKey)}&id=${encodeURIComponent(taskId)}`;
 
     const resp = await fetch(url, {
@@ -100,15 +100,12 @@ export const suchuangProvider: ImageProvider = {
     const status = statusFromDetail(payload);
     const imageUrl = extractImageUrl(payload?.data);
 
-    // status 2 = completed with images (速创 API specific)
-    const isCompletedStatus = status === 1 || status === 2 || status === 3 || status === 200 || status === null || status === undefined;
-
-    if (imageUrl && isCompletedStatus) {
+    if (imageUrl) {
       return { status: "completed", images: [imageUrl] };
     }
 
-    if (!imageUrl && isCompletedStatus) {
-      return { status: "failed", error: "Task completed without image URL" };
+    if (status === 4 || status === 5 || status === 500 || status === -1) {
+      return { status: "failed", error: "Generation failed" };
     }
 
     return { status: "generating" };

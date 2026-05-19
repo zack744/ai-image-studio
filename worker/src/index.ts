@@ -7,13 +7,23 @@ import { authRoutes } from "./routes/auth";
 import { chatRoutes } from "./routes/chat";
 import { generateRoutes } from "./routes/generate";
 import { imageRoutes } from "./routes/image";
+import type { AppEnv } from "./types";
 
 initProviders();
 
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono<AppEnv>();
 
 app.use("*", cors({
-  origin: (origin) => origin,
+  origin: (origin, c) => {
+    if (!origin) return null;
+
+    const allowedOrigins = (c.env.ALLOWED_ORIGINS || "")
+      .split(",")
+      .map((item: string) => item.trim())
+      .filter(Boolean);
+
+    return allowedOrigins.includes(origin) ? origin : null;
+  },
   allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowHeaders: ["Content-Type", "Authorization"],
   credentials: true,

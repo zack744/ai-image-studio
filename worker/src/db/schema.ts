@@ -117,7 +117,7 @@ export const aiProviders = sqliteTable(
   "ai_providers",
   {
     id: text().primaryKey().$defaultFn(() => nanoid()),
-    providerId: text("provider_id").notNull().unique(),
+    providerId: text("provider_id").notNull(),
     userId: text("user_id").notNull(),
     enabled: integer({ mode: "boolean" }).default(true).notNull(),
     settings: text({ mode: "json" }),
@@ -152,6 +152,10 @@ export const chatsRelations = relations(chats, ({ many }) => ({
 }));
 
 export const messagesRelations = relations(messages, ({ one, many }) => ({
+  chat: one(chats, {
+    fields: [messages.chatId],
+    references: [chats.id],
+  }),
   generation: one(messageGenerations, {
     fields: [messages.generationId],
     references: [messageGenerations.id],

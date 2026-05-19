@@ -5,14 +5,24 @@ compatibility_date = "2025-05-15"
 [[d1_databases]]
 binding = "DB"
 database_name = "typix-db"
-database_id = "local-dev"
+database_id = "7ba8c436-fa0d-495b-b2bc-0bb014f54a0e"
 
 [[r2_buckets]]
 binding = "R2"
 bucket_name = "typix-images"
 
 [vars]
-JWT_SECRET = ""
+ENVIRONMENT = "development"
+ALLOWED_ORIGINS = "http://localhost:5173,http://127.0.0.1:5173"
 
 [env.production]
-vars = { ENVIRONMENT = "production" }
+vars = { ENVIRONMENT = "production", ALLOWED_ORIGINS = "https://typix.art,https://preview.typix.art" }
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "typix-db"
+database_id = "7ba8c436-fa0d-495b-b2bc-0bb014f54a0e"
+
+[[env.production.r2_buckets]]
+binding = "R2"
+bucket_name = "typix-images"

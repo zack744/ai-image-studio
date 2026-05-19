@@ -29,10 +29,11 @@
 		}
 	},
 	"include": [
-		"**/*.ts",
-		"**/*.tsx",
-		"**/*.cjs",
-		"**/*.js",
-			],
-	"exclude": ["node_modules", "dist", "docs"]
+		"src/**/*.ts",
+		"src/**/*.tsx",
+		"src/**/*.cjs",
+		"src/**/*.js",
+		"vite.config.ts"
+	],
+	"exclude": ["node_modules", "dist", "docs", "worker"]
 }

@@ -29,5 +29,6 @@ tsconfig.tsbuildinfo
 .env
 .dev.vars
 worker/.dev.vars
+worker/.wrangler/
 .bin
 /.files/

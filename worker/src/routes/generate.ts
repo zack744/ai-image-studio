@@ -2,13 +2,14 @@ import { Hono } from "hono";
 import { eq, and } from "drizzle-orm";
 import { messageGenerations, messages, files } from "../db/schema";
 import { getProvider } from "../providers";
-import type { DbType } from "../db";
+import { logger } from "../lib/logger";
+import type { AppEnv } from "../types";
 
-export const generateRoutes = new Hono<{ Bindings: Env }>();
+export const generateRoutes = new Hono<AppEnv>();
 
 // POST /generate — submit a generation task (returns immediately with taskId)
 generateRoutes.post("/", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
   const { userId } = c.get("auth");
 
   const body = await c.req.json();
@@ -30,9 +31,18 @@ generateRoutes.post("/", async (c) => {
 
   const params = (generation.parameters as any) || {};
   const apiKey = c.env?.SUCHUANG_API_KEY || "";
+  if (!apiKey) {
+    await db.update(messageGenerations).set({
+      status: "failed",
+      errorReason: "CONFIG_ERROR",
+      updatedAt: new Date().toISOString(),
+    }).where(eq(messageGenerations.id, generationId));
+    return c.json({ error: "Provider API key is not configured" }, 500);
+  }
 
   const provider = getProvider(generation.provider);
   if (!provider) {
+    logger.error("Provider not found", { generationId, provider: generation.provider });
     await db.update(messageGenerations).set({
       status: "failed",
       errorReason: `Provider ${generation.provider} not found`,
@@ -41,11 +51,16 @@ generateRoutes.post("/", async (c) => {
     return c.json({ error: `Provider ${generation.provider} not found` }, 400);
   }
 
+  logger.info("Submitting generation", { generationId, provider: generation.provider, prompt: generation.prompt.slice(0, 80) });
+
   try {
     const taskId = await provider.submit(generation.prompt, {
+      prompt: generation.prompt,
       aspectRatio: params.aspectRatio,
-      n: 1,
+      n: params.imageCount || 1,
     }, apiKey);
+
+    logger.info("Generation submitted", { generationId, taskId });
 
     await db.update(messageGenerations).set({
       status: "generating",
@@ -55,6 +70,8 @@ generateRoutes.post("/", async (c) => {
 
     return c.json({ success: true, generationId });
   } catch (error: any) {
+    logger.error("Submit generation failed", { generationId, error: error.message });
+
     await db.update(messageGenerations).set({
       status: "failed",
       errorReason: error.message || "Submit failed",
@@ -67,7 +84,7 @@ generateRoutes.post("/", async (c) => {
 
 // GET /generate/:id — poll generation status (proactively checks provider on each request)
 generateRoutes.get("/:id", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
   const { userId } = c.get("auth");
   const id = c.req.param("id");
 
@@ -91,6 +108,11 @@ generateRoutes.get("/:id", async (c) => {
     generation = { ...generation, status: "failed" as const, errorReason: "TIMEOUT" };
   }
 
+  // If still pending, the frontend never triggered generation — warn loudly
+  if (generation.status === "pending") {
+    logger.warn("Poll called but generation still pending — POST /api/generate was never received", { generationId: id });
+  }
+
   // If generating and has a taskId, poll the provider once
   if (generation.status === "generating") {
     const params = generation.parameters as any;
@@ -99,9 +121,20 @@ generateRoutes.get("/:id", async (c) => {
     if (provider && params?.taskId) {
       try {
         const apiKey = c.env?.SUCHUANG_API_KEY || "";
+        if (!apiKey) {
+          await db.update(messageGenerations).set({
+            status: "failed",
+            errorReason: "CONFIG_ERROR",
+            updatedAt: new Date().toISOString(),
+          }).where(eq(messageGenerations.id, id));
+          generation = { ...generation, status: "failed" as const, errorReason: "CONFIG_ERROR" };
+          return c.json({ ...generation, resultUrls: [] });
+        }
+        logger.debug("Polling provider", { generationId: id, taskId: params.taskId });
         const result = await provider.poll(params.taskId, apiKey);
 
         if (result.status === "completed" && result.images && result.images.length > 0) {
+          logger.info("Generation completed", { generationId: id, imageCount: result.images.length });
           const fileIds: string[] = [];
           for (const imageUrl of result.images) {
             const [file] = await db.insert(files).values({
@@ -131,16 +164,16 @@ generateRoutes.get("/:id", async (c) => {
             updatedAt: new Date().toISOString(),
           }).where(eq(messageGenerations.id, id));
 
-          generation = { ...generation, status: "failed" as const, errorReason: result.error };
+          generation = { ...generation, status: "failed" as const, errorReason: result.error || "Generation failed" };
         }
       } catch (err: any) {
-        console.error("Poll error:", err.message);
+        logger.error("Poll failed", { generationId: id, error: err.message });
       }
     }
   }
 
   let resultUrls: string[] = [];
-  if (generation.fileIds) {
+  if (generation?.fileIds) {
     const fileIds = generation.fileIds as string[];
     const fileRecords = await Promise.all(
       fileIds.map((fid) => db.query.files.findFirst({ where: eq(files.id, fid) }))
@@ -156,7 +189,7 @@ generateRoutes.get("/:id", async (c) => {
 
 // POST /generate/regenerate — regenerate a message
 generateRoutes.post("/regenerate", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
   const { userId } = c.get("auth");
 
   const { messageId } = await c.req.json() as { messageId: string };
@@ -190,4 +223,3 @@ generateRoutes.post("/regenerate", async (c) => {
     generationId: message.generation.id,
   });
 });
-

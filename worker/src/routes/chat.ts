@@ -1,20 +1,20 @@
 import { Hono } from "hono";
 import { z } from "zod";
-import { eq, and, desc, ne } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { chats, messages, messageAttachments, messageGenerations, files } from "../db/schema";
-import { getProvider } from "../providers";
 import type { DbType } from "../db";
+import type { AppEnv } from "../types";
 
 const createChatSchema = z.object({
   title: z.string().min(1).max(500),
   provider: z.string().min(1),
   model: z.string().min(1),
   content: z.string().optional(),
-  images: z.array(z.string()).optional(),
+  images: z.array(z.string().max(14 * 1024 * 1024)).max(10).optional(),
   attachments: z.array(z.object({
-    data: z.string(),
+    data: z.string().max(14 * 1024 * 1024),
     type: z.enum(["image"]).default("image"),
-  })).optional(),
+  })).max(10).optional(),
   imageCount: z.number().int().min(1).max(10).default(1),
   aspectRatio: z.enum(["1:1", "16:9", "9:16", "4:3", "3:4"]).optional(),
 });
@@ -25,19 +25,77 @@ const createMessageSchema = z.object({
   provider: z.string().min(1),
   model: z.string().min(1),
   type: z.enum(["text"]).default("text"),
-  images: z.array(z.string()).optional(),
+  images: z.array(z.string().max(14 * 1024 * 1024)).max(10).optional(),
   attachments: z.array(z.object({
-    data: z.string(),
+    data: z.string().max(14 * 1024 * 1024),
     type: z.enum(["image"]).default("image"),
-  })).optional(),
+  })).max(10).optional(),
   imageCount: z.number().int().min(1).max(10).default(1),
   aspectRatio: z.enum(["1:1", "16:9", "9:16", "4:3", "3:4"]).optional(),
 });
 
-export const chatRoutes = new Hono<{ Bindings: Env }>();
+const MAX_ATTACHMENT_BYTES = 10 * 1024 * 1024;
+const DATA_URL_PATTERN = /^data:(image\/[a-zA-Z0-9.+-]+);base64,(.+)$/;
+
+function extensionFromMime(mime: string): string {
+  const subtype = mime.split("/")[1]?.toLowerCase() || "png";
+  if (subtype === "jpeg") return "jpg";
+  if (subtype === "svg+xml") return "svg";
+  return subtype.replace(/[^a-z0-9]/g, "") || "png";
+}
+
+function decodeImageDataUrl(dataUrl: string): { mime: string; bytes: Uint8Array } {
+  const match = DATA_URL_PATTERN.exec(dataUrl);
+  if (!match) {
+    throw new Error("INVALID_IMAGE_DATA");
+  }
+
+  const [, mime, base64] = match;
+  const binary = atob(base64);
+  if (binary.length > MAX_ATTACHMENT_BYTES) {
+    throw new Error("IMAGE_TOO_LARGE");
+  }
+
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+
+  return { mime, bytes };
+}
+
+async function storeImageData(db: DbType, env: Env, userId: string, dataUrl: string) {
+  const parsed = decodeImageDataUrl(dataUrl);
+
+  if (env.R2 && env.R2_PUBLIC_URL) {
+    const id = crypto.randomUUID();
+    const key = `uploads/${userId}/${new Date().toISOString().slice(0, 10)}/${id}.${extensionFromMime(parsed.mime)}`;
+    await env.R2.put(key, parsed.bytes, {
+      httpMetadata: { contentType: parsed.mime },
+    });
+
+    const [file] = await db.insert(files).values({
+      userId,
+      storage: "r2",
+      url: `${env.R2_PUBLIC_URL.replace(/\/$/, "")}/${key}`,
+    }).returning();
+
+    return file!;
+  }
+
+  const [file] = await db.insert(files).values({
+    userId,
+    storage: "base64",
+    url: dataUrl,
+  }).returning();
+
+  return file!;
+}
+
+export const chatRoutes = new Hono<AppEnv>();
 
 chatRoutes.get("/", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
   const { userId } = c.get("auth");
 
   const result = await db.query.chats.findMany({
@@ -49,7 +107,7 @@ chatRoutes.get("/", async (c) => {
 });
 
 chatRoutes.get("/:id", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
   const { userId } = c.get("auth");
   const id = c.req.param("id");
 
@@ -68,11 +126,22 @@ chatRoutes.get("/:id", async (c) => {
   });
 
   const enrichedMessages = await Promise.all(chatMessages.map(async (msg) => {
-    let generation = null;
+    let generation: Record<string, any> | null = null;
     if (msg.generationId) {
-      generation = await db.query.messageGenerations.findFirst({
+      const gen = await db.query.messageGenerations.findFirst({
         where: eq(messageGenerations.id, msg.generationId),
       });
+      if (gen) {
+        generation = { ...gen };
+        // Resolve resultUrls from fileIds for completed generations
+        if (gen.status === "completed" && gen.fileIds) {
+          const genFileIds = gen.fileIds as string[];
+          const genFileRecords = await Promise.all(
+            genFileIds.map((fid) => db.query.files.findFirst({ where: eq(files.id, fid) })),
+          );
+          generation.resultUrls = genFileRecords.filter(Boolean).map((f) => f!.url);
+        }
+      }
     }
 
     const atts = await db.query.messageAttachments.findMany({
@@ -92,7 +161,7 @@ chatRoutes.get("/:id", async (c) => {
 });
 
 chatRoutes.post("/", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
   const { userId } = c.get("auth");
 
   const body = await c.req.json();
@@ -111,7 +180,7 @@ chatRoutes.post("/", async (c) => {
   }).returning();
 
   if (req.content) {
-    const result = await createMessageInternal(db, userId, {
+    const result = await createMessageInternal(db, c.env, userId, {
       chatId: chat!.id,
       content: req.content,
       provider: req.provider,
@@ -130,7 +199,7 @@ chatRoutes.post("/", async (c) => {
 });
 
 chatRoutes.put("/:id", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
   const { userId } = c.get("auth");
   const id = c.req.param("id");
 
@@ -158,7 +227,7 @@ chatRoutes.put("/:id", async (c) => {
 });
 
 chatRoutes.delete("/:id", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
   const { userId } = c.get("auth");
   const id = c.req.param("id");
 
@@ -175,7 +244,7 @@ chatRoutes.delete("/:id", async (c) => {
 
 // Message routes
 chatRoutes.post("/:chatId/messages", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
   const { userId } = c.get("auth");
   const chatId = c.req.param("chatId");
 
@@ -192,12 +261,12 @@ chatRoutes.post("/:chatId/messages", async (c) => {
     return c.json({ error: "Chat not found" }, 404);
   }
 
-  const result = await createMessageInternal(db, userId, parsed.data);
+  const result = await createMessageInternal(db, c.env, userId, parsed.data);
   return c.json(result);
 });
 
 chatRoutes.delete("/:chatId/messages/:messageId", async (c) => {
-  const db = c.get("db") as DbType;
+  const db = c.get("db");
   const { userId } = c.get("auth");
   const chatId = c.req.param("chatId");
   const messageId = c.req.param("messageId");
@@ -220,6 +289,7 @@ chatRoutes.delete("/:chatId/messages/:messageId", async (c) => {
 
 export async function createMessageInternal(
   db: DbType,
+  env: Env,
   userId: string,
   req: { chatId: string; content: string; provider: string; model: string; type?: string; images?: string[]; attachments?: Array<{ data: string; type: "image" }>; imageCount?: number; aspectRatio?: string },
 ) {
@@ -238,12 +308,7 @@ export async function createMessageInternal(
   if (req.attachments && req.attachments.length > 0) {
     for (let i = 0; i < req.attachments.length; i++) {
       const att = req.attachments[i];
-      // Store image data as base64 in files table (or upload to R2)
-      const [file] = await db.insert(files).values({
-        userId,
-        storage: "base64",
-        url: att.data,
-      }).returning();
+      const file = await storeImageData(db, env, userId, att.data);
 
       if (file) {
         await db.insert(messageAttachments).values({
@@ -253,9 +318,9 @@ export async function createMessageInternal(
         });
 
         attachmentResults.push({
-          id: `${userMessage!.id}-${i}`,
+          id: file.id,
           type: att.type,
-          url: att.data,
+          url: file.url,
         });
       }
     }
@@ -263,11 +328,7 @@ export async function createMessageInternal(
   } else if (req.images && req.images.length > 0) {
     for (let i = 0; i < req.images.length; i++) {
       const data = req.images[i];
-      const [file] = await db.insert(files).values({
-        userId,
-        storage: "base64",
-        url: data,
-      }).returning();
+      const file = await storeImageData(db, env, userId, data);
 
       if (file) {
         await db.insert(messageAttachments).values({
@@ -277,9 +338,9 @@ export async function createMessageInternal(
         });
 
         attachmentResults.push({
-          id: `${userMessage!.id}-${i}`,
+          id: file.id,
           type: "image",
-          url: data,
+          url: file.url,
         });
       }
     }

@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/ui/avatar";
 import { ImagePreview, type ImageSlide } from "@/app/components/ui/image-preview";
 import { Skeleton } from "@/app/components/ui/skeleton";
-import { useChatService } from "@/app/hooks/useService";
+import { apiClient } from "@/app/lib/api-client";
 import { cn } from "@/app/lib/utils";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -35,7 +35,6 @@ export function ChatMessageItem({
 	onDelete,
 }: ChatMessageItemProps) {
 	const { t } = useTranslation();
-	const chatService = useChatService();
 	const intervalRef = useRef<NodeJS.Timeout | null>(null);
 	const skipPoll = useRef<boolean>(false);
 	const pollingGenerationIdRef = useRef<string | null>(null); // Track which generation is being polled
@@ -141,9 +140,7 @@ export function ChatMessageItem({
 						return;
 					}
 
-					const status = await chatService.getGenerationStatus({
-						generationId: generationId!,
-					});
+					const status = await apiClient.generate.getStatus(generationId!);
 
 					if (status) {
 						// Update only the generation field
@@ -191,7 +188,7 @@ export function ChatMessageItem({
 			intervalRef.current = null;
 			pollingGenerationIdRef.current = null;
 		}
-	}, [isMessageGenerating, message.generationId, message.id, onMessageUpdate, chatService]);
+	}, [isMessageGenerating, message.generationId, message.id, onMessageUpdate]);
 	// Note: Removed message.generation?.id from dependencies to avoid unnecessary re-runs
 
 	// Cleanup interval on unmount

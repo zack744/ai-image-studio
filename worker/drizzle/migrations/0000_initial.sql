@@ -1,4 +1,4 @@
-CREATE TABLE `user` (
+CREATE TABLE IF NOT EXISTS `user` (
   `id` text PRIMARY KEY NOT NULL,
   `name` text NOT NULL,
   `email` text NOT NULL UNIQUE,
@@ -9,7 +9,7 @@ CREATE TABLE `user` (
   `updated_at` text NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE `session` (
+CREATE TABLE IF NOT EXISTS `session` (
   `id` text PRIMARY KEY NOT NULL,
   `expires_at` text NOT NULL,
   `token` text NOT NULL UNIQUE,
@@ -20,7 +20,7 @@ CREATE TABLE `session` (
   `user_id` text NOT NULL REFERENCES `user`(`id`) ON DELETE CASCADE
 );
 
-CREATE TABLE `account` (
+CREATE TABLE IF NOT EXISTS `account` (
   `id` text PRIMARY KEY NOT NULL,
   `account_id` text NOT NULL,
   `provider_id` text NOT NULL,
@@ -36,7 +36,7 @@ CREATE TABLE `account` (
   `updated_at` integer NOT NULL
 );
 
-CREATE TABLE `settings` (
+CREATE TABLE IF NOT EXISTS `settings` (
   `id` text PRIMARY KEY NOT NULL,
   `user_id` text NOT NULL UNIQUE REFERENCES `user`(`id`) ON DELETE CASCADE,
   `theme` text DEFAULT 'system',
@@ -46,7 +46,7 @@ CREATE TABLE `settings` (
   `updated_at` text NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE `chats` (
+CREATE TABLE IF NOT EXISTS `chats` (
   `id` text PRIMARY KEY NOT NULL,
   `title` text NOT NULL,
   `user_id` text NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE `chats` (
   `updated_at` text NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE `files` (
+CREATE TABLE IF NOT EXISTS `files` (
   `id` text PRIMARY KEY NOT NULL,
   `user_id` text NOT NULL,
   `storage` text NOT NULL DEFAULT 'r2',
@@ -66,7 +66,7 @@ CREATE TABLE `files` (
   `updated_at` text NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE `message_generations` (
+CREATE TABLE IF NOT EXISTS `message_generations` (
   `id` text PRIMARY KEY NOT NULL,
   `type` text DEFAULT 'image' NOT NULL,
   `user_id` text NOT NULL,
@@ -83,7 +83,7 @@ CREATE TABLE `message_generations` (
   `updated_at` text NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE `messages` (
+CREATE TABLE IF NOT EXISTS `messages` (
   `id` text PRIMARY KEY NOT NULL,
   `user_id` text NOT NULL,
   `chat_id` text NOT NULL REFERENCES `chats`(`id`) ON DELETE CASCADE,
@@ -96,7 +96,7 @@ CREATE TABLE `messages` (
   `updated_at` text NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE `message_attachments` (
+CREATE TABLE IF NOT EXISTS `message_attachments` (
   `id` text PRIMARY KEY NOT NULL,
   `message_id` text NOT NULL REFERENCES `messages`(`id`) ON DELETE CASCADE,
   `file_id` text NOT NULL REFERENCES `files`(`id`) ON DELETE CASCADE,
@@ -105,9 +105,9 @@ CREATE TABLE `message_attachments` (
   `updated_at` text NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE TABLE `ai_providers` (
+CREATE TABLE IF NOT EXISTS `ai_providers` (
   `id` text PRIMARY KEY NOT NULL,
-  `provider_id` text NOT NULL UNIQUE,
+  `provider_id` text NOT NULL,
   `user_id` text NOT NULL,
   `enabled` integer DEFAULT 1 NOT NULL,
   `settings` text,
@@ -116,7 +116,7 @@ CREATE TABLE `ai_providers` (
   UNIQUE(`user_id`, `provider_id`)
 );
 
-CREATE TABLE `ai_models` (
+CREATE TABLE IF NOT EXISTS `ai_models` (
   `id` text PRIMARY KEY NOT NULL,
   `provider_id` text NOT NULL,
   `model_id` text NOT NULL,
