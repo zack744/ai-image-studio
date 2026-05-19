@@ -1,4 +1,4 @@
-import type { ThemeColor } from "@/server/db/schemas";
+import type { ThemeColor } from "@/app/types";
 
 // Unified theme color configuration
 // Contains CSS variables for each theme (except default)

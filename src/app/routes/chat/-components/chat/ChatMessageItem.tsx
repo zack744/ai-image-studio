@@ -3,15 +3,13 @@ import { ImagePreview, type ImageSlide } from "@/app/components/ui/image-preview
 import { Skeleton } from "@/app/components/ui/skeleton";
 import { useChatService } from "@/app/hooks/useService";
 import { cn } from "@/app/lib/utils";
-import type { chatService } from "@/server/service/chat";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { GenerationErrorItem } from "./GenerationErrorItem";
 import { MessageActions } from "./MessageActions";
 
-// Type inference from service functions
-type ChatData = NonNullable<Awaited<ReturnType<typeof chatService.getChatById>>>;
-type ChatMessage = ChatData["messages"][0];
+type ChatMessage = Record<string, any>;
+type ChatData = { messages: ChatMessage[] } & Record<string, any>;
 
 type User = {
 	id: string;

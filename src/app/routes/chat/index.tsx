@@ -7,7 +7,7 @@ import { ChatInput } from "@/app/routes/chat/-components/chat/ChatInput";
 import { ChatSidebar } from "@/app/routes/chat/-components/sidebar/ChatSidebar";
 import { useChat } from "@/app/routes/chat/-hooks/useChat";
 import { ChatSidebarProvider, useSidebar } from "@/app/routes/chat/-hooks/useChatSidebar";
-import type { AspectRatio } from "@/server/ai/types/api";
+import type { AspectRatio } from "@/app/ai/types/api";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

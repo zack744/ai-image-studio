@@ -11,17 +11,13 @@ import { ScrollArea } from "@/app/components/ui/scroll-area";
 import { Sheet, SheetContent } from "@/app/components/ui/sheet";
 import { useAuth } from "@/app/hooks/useAuth";
 import { cn } from "@/app/lib/utils";
-import { mode } from "@/server/lib/env";
-import type { chatService } from "@/server/service/chat";
 import { MoreVertical, Palette, Plus, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSidebar } from "../../-hooks/useChatSidebar";
 import { ChatSidebarTrigger } from "./ChatSidebarTrigger";
 
-// Type inference from service functions
-type ChatList = Awaited<ReturnType<typeof chatService.getChats>>;
-type ChatItem = ChatList[0];
+type ChatItem = Record<string, any>;
 
 type User = {
 	id: string;
@@ -198,7 +194,7 @@ export function ChatSidebar({
 				</div>
 			</div>
 			{/* BOTTOM SECTION - Fixed height at bottom (User Profile or Login) */}
-			{mode !== "client" && (
+			
 				<div className="mt-auto flex-shrink-0">
 					<div className="p-4">
 						{isAuthenticated ? (
@@ -216,7 +212,7 @@ export function ChatSidebar({
 						)}
 					</div>
 				</div>
-			)}
+			
 		</div>
 	);
 	// Mobile: Use Sheet (drawer) - controlled by hooks

@@ -8,9 +8,9 @@
 
 ## Stack
 
-**Frontend:** React + Tailwind + shadcn/ui + Tanstack Router + Zustand + BetterAuth  
-**Backend:** Hono.js + SQLite + Drizzle ORM
-**Package Manager:** pnpm
+**Frontend:** React 19 + Vite 6 + Tailwind CSS v4 + shadcn/ui + TanStack Router + Zustand + SWR  
+**Backend:** Cloudflare Workers (Hono) + D1 + R2 + Drizzle ORM + JWT (jose) — see worker/
+**Package Manager:** pnpm (workspace monorepo)
 
 ## File Naming
 

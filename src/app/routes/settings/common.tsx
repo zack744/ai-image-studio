@@ -8,19 +8,13 @@ import { THEME_COLOR_KEYS, getThemePreviewColors } from "@/app/lib/theme-colors"
 import { SettingsItem } from "@/app/routes/settings/-components/SettingsItem";
 import { SettingsPageLayout } from "@/app/routes/settings/-components/SettingsPageLayout";
 import { useUIStore } from "@/app/stores";
-import type { Theme, ThemeColor } from "@/server/db/schemas";
-import type { UpdateSettings } from "@/server/service/settings";
+import type { Theme, ThemeColor } from "@/app/types";
 import { createFileRoute } from "@tanstack/react-router";
 import { Monitor, Moon, Sun } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-// Import settingsService to infer types
-import type { settingsService } from "@/server/service/settings";
+type SettingsData = { theme?: string; themeColor?: string; language?: string };
 
-// Infer types from service methods
-type SettingsData = Awaited<ReturnType<typeof settingsService.getSettings>>;
-
-// Combined settings type (server + UI store)
 type CombinedSettings = Partial<SettingsData> & {
 	theme: Theme;
 	themeColor: ThemeColor;
@@ -29,7 +23,7 @@ type CombinedSettings = Partial<SettingsData> & {
 
 interface GeneralSettingsProps {
 	settings: CombinedSettings;
-	updateSetting: (key: keyof UpdateSettings, value: any) => Promise<void>;
+	updateSetting: (key: string, value: any) => Promise<void>;
 	isLoading: boolean;
 }
 

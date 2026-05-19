@@ -26,8 +26,8 @@ tsconfig.tsbuildinfo
 *.sw?
 .codebuddy
 
-.wrangler
 .env
+.dev.vars
+worker/.dev.vars
 .bin
-db.sqlite
 /.files/

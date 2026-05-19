@@ -1,14 +1,10 @@
 import { useAuth } from "@/app/hooks/useAuth";
 import { useAiService } from "@/app/hooks/useService";
 import { useChatService } from "@/app/hooks/useService";
-import type { AspectRatio } from "@/server/ai/types/api";
-import type { chatService } from "@/server/service/chat";
-import { localUserId } from "@/server/service/context";
+import type { AspectRatio } from "@/app/ai/types/api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-// Type inference from service functions
-type ChatData = NonNullable<Awaited<ReturnType<typeof chatService.getChatById>>>;
 // User type for frontend
 type User = {
 	id: string;
@@ -16,10 +12,12 @@ type User = {
 	avatar?: string;
 };
 
+const GUEST_ID = "GUEST";
+
 // Mock user data for demo purposes
 const guestUser: User = {
-	id: localUserId,
-	nickname: localUserId,
+	id: GUEST_ID,
+	nickname: GUEST_ID,
 	avatar: undefined,
 };
 
@@ -116,6 +114,9 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 	const { trigger: deleteChatTrigger } = chatService.deleteChat.swrMutation("delete-chat");
 	const { trigger: updateChatTrigger } = chatService.updateChat.swrMutation("update-chat");
 	const { trigger: sendMessageTrigger } = chatService.createMessage.swrMutation("send-message");
+	const { trigger: generateTrigger } = chatService.createMessageGenerate.swrMutation("generate");
+	const { trigger: deleteMessageTrigger } = chatService.deleteMessage.swrMutation("delete-message");
+	const { trigger: regenerateTrigger } = chatService.regenerateMessage.swrMutation("regenerate-message");
 	// Transform API data to local format
 	const chats = useMemo(() => {
 		// Return empty array if no data
@@ -317,7 +318,7 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 							assistantMessage.generation.status = "generating";
 
 							// Fire and forget - don't await, let it run in background
-							chatService.createMessageGenerate({ generationId: assistantMessage.generation.id }).catch((error) => {
+							generateTrigger({ generationId: assistantMessage.generation.id }).catch((error) => {
 								console.error("Error triggering image generation:", error);
 							});
 						}
@@ -432,7 +433,7 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 
 				// Use returned messages to update the chat data instead of revalidating
 				if (result?.messages) {
-					// Trigger image generation in browser first (not blocked by CF Worker timeout)
+					// Trigger image generation in browser first (not blocked by server timeout)
 					const assistantMessage = result.messages.find((msg) => msg.role === "assistant");
 					const shouldTriggerGeneration = assistantMessage?.generation?.id;
 
@@ -523,7 +524,7 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 	}, []);
 
 	const updateMessage = useCallback(
-		(messageId: string, updates: Partial<ChatData["messages"][0]>) => {
+		(messageId: string, updates: Record<string, any>) => {
 			currentChatMutate((currentData) => {
 				if (!currentData) return currentData;
 
@@ -553,7 +554,7 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 				}, false);
 
 				// Call the API to delete from server
-				await chatService.deleteMessage({ messageId });
+				await deleteMessageTrigger({ messageId, chatId: currentChatId } as any);
 
 				// Revalidate chat data to ensure consistency
 				await currentChatMutate();
@@ -599,9 +600,9 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 				}, false);
 
 				// Call the API
-				const result = await chatService.regenerateMessage({ messageId });
+				const result = await regenerateTrigger({ messageId });
 
-				// Trigger image generation in browser (not blocked by CF Worker timeout)
+				// Trigger image generation in browser (not blocked by server timeout)
 				if (result?.generationId) {
 					// Fire and forget - don't await, let it run in background
 					chatService.createMessageGenerate({ generationId: result.generationId }).catch((error) => {

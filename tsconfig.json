@@ -11,6 +11,7 @@
 		"verbatimModuleSyntax": true,
 		/* Strictness */
 		"strict": true,
+		"noImplicitAny": false,
 		"noUncheckedIndexedAccess": true,
 		"checkJs": true,
 		/* Bundled projects */
@@ -20,7 +21,7 @@
 		"moduleResolution": "Bundler",
 		"jsx": "react-jsx",
 		"incremental": true,
-		"types": ["@cloudflare/workers-types"],
+		"types": [],
 		/* Path Aliases */
 		"baseUrl": ".",
 		"paths": {
@@ -32,8 +33,6 @@
 		"**/*.tsx",
 		"**/*.cjs",
 		"**/*.js",
-		"src/app/routes/settings/provider.tsx.bak",
-		"src/app/routes/settings/provider.$providerId.tsx.bak"
-	],
+			],
 	"exclude": ["node_modules", "dist", "docs"]
 }

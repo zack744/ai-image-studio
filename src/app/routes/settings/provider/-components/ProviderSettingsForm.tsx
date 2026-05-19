@@ -5,8 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/app/components/ui/switch";
 import { useIsMobile } from "@/app/hooks/useMobile";
 import { useToast } from "@/app/hooks/useToast";
-import type { ApiProviderSettingsItem } from "@/server/ai/types/provider";
-import type { aiService } from "@/server/service/ai";
+import type { ApiProviderSettingsItem } from "@/app/ai/types/provider";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LucideEye, LucideEyeOff } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -14,8 +13,8 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { z } from "zod";
 
-export type ProviderData = Awaited<ReturnType<typeof aiService.getAiProviderById>>;
-export type UpdateProviderParams = Parameters<typeof aiService.updateAiProvider>[0];
+export type ProviderData = Record<string, any>;
+export type UpdateProviderParams = { providerId: string; enabled?: boolean; settings?: Record<string, any> };
 
 interface ProviderSettingsFormProps {
 	provider: ProviderData;

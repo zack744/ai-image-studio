@@ -1,7 +1,6 @@
-import type { aiService } from "@/server/service/ai";
 import { create } from "zustand";
 
-export type AiProvider = Awaited<ReturnType<typeof aiService.getAiProviders>>[0];
+export type AiProvider = Record<string, any>;
 
 interface AiProviderState {
 	providers: AiProvider[];

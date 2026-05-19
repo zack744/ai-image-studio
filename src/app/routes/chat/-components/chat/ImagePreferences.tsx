@@ -1,8 +1,8 @@
 import { Slider } from "@/app/components/ui/slider";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/app/components/ui/tooltip";
 import { cn } from "@/app/lib/utils";
-import { getModelById } from "@/server/ai/provider";
-import type { AspectRatio } from "@/server/ai/types/api";
+import { getModelById } from "@/app/ai/provider";
+import type { AspectRatio } from "@/app/ai/types/api";
 import { RectangleHorizontal, RectangleVertical, Square } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";

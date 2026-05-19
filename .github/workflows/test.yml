@@ -27,9 +27,7 @@ jobs:
 
       - name: Check Code Formatting
         run: |
-          # Run format command to format code
           pnpm run fmt
-          # Check if there are any changes after formatting
           if ! git diff --quiet --exit-code; then
             echo "❌ Code is not properly formatted! Please run 'pnpm run fmt' locally and commit the changes."
             echo "Files with formatting issues:"
@@ -40,6 +38,10 @@ jobs:
           else
             echo "✅ Code formatting is correct!"
           fi
+
+      - name: Type Check
+        run: |
+          pnpm exec tsc --noEmit
 
       - name: Build
         run: |

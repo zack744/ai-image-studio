@@ -1,36 +1,86 @@
-import { authClient } from "@/app/lib/auth-client";
-import { mode } from "@/server/lib/env";
+import { apiClient } from "@/app/lib/api-client";
+import { useCallback, useEffect, useState } from "react";
 
-function useAuthWrap() {
-	const session = authClient.useSession();
-
-	return {
-		// User data and authentication status
-		user: session.data?.user || null,
-		isLogin: !!session.data?.user,
-		isLoading: session.isPending,
-		error: session.error,
-
-		// Authentication methods
-		logout: authClient.signOut,
-		signIn: authClient.signIn,
-		signUp: authClient.signUp,
-	};
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  image?: string;
 }
 
-type UseAuthReturnType = ReturnType<typeof useAuthWrap>;
-
-// Custom hook that wraps BetterAuth's useSession
 export function useAuth() {
-	if (mode === "client") {
-		// In client mode, do nothing
-		return {
-			user: null,
-			isLogin: false,
-			isLoading: false,
-			error: null,
-		} as UseAuthReturnType;
-	}
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-	return useAuthWrap();
+  const loadUser = useCallback(async () => {
+    const token = apiClient.getToken();
+    if (!token) {
+      setUser(null);
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      const userData = await apiClient.auth.getMe();
+      setUser(userData);
+    } catch (e: any) {
+      // Only clear token on auth errors (401), not on network/temporary errors
+      if (e?.code === "unauthorized") {
+        apiClient.clearToken();
+      }
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadUser();
+  }, [loadUser]);
+
+  const register = useCallback(async (email: string, password: string, name: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await apiClient.auth.register(email, password, name);
+      setUser(data.user);
+      return data;
+    } catch (e: any) {
+      setError(e);
+      throw e;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const login = useCallback(async (email: string, password: string) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const data = await apiClient.auth.login(email, password);
+      setUser(data.user);
+      return data;
+    } catch (e: any) {
+      setError(e);
+      throw e;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const logout = useCallback(() => {
+    apiClient.clearToken();
+    setUser(null);
+  }, []);
+
+  return {
+    user,
+    isLogin: !!user,
+    isLoading,
+    error,
+    register,
+    login,
+    logout,
+  };
 }

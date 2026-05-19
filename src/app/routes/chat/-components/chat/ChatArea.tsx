@@ -1,5 +1,4 @@
-import { ScrollArea } from "@/app/components/ui/scroll-area";
-import type { chatService } from "@/server/service/chat";
+﻿import { ScrollArea } from "@/app/components/ui/scroll-area";
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSidebar } from "../../-hooks/useChatSidebar";
@@ -7,8 +6,7 @@ import { ChatSidebarTrigger } from "../sidebar/ChatSidebarTrigger";
 import { ChatMessageItem } from "./ChatMessageItem";
 import { ModelBadge } from "./ModelBadge";
 
-// Type inference from service functions
-type ChatData = NonNullable<Awaited<ReturnType<typeof chatService.getChatById>>>;
+type ChatData = { messages: Record<string, any>[] } & Record<string, any>;
 
 type User = {
 	id: string;
@@ -170,7 +168,7 @@ export const ChatArea = forwardRef<ChatAreaRef, ChatAreaProps>(
 							{isMobile && <ChatSidebarTrigger className="-ml-4 flex-shrink-0" />}
 							{/* App Icon */}
 							<div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/80">
-								<span className="text-lg">🎨</span>
+								<img src="/logo.png" alt="" className="h-6 w-6" />
 							</div>
 							{/* Content area */}
 							<div className="flex min-w-0 flex-1 items-center justify-between">
@@ -200,10 +198,10 @@ export const ChatArea = forwardRef<ChatAreaRef, ChatAreaProps>(
 										<div className="mb-6 flex justify-center">
 											<div className="relative">
 												<div className="flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-primary to-primary/80 shadow-lg">
-													<span className="text-3xl">🎨</span>
+													<img src="/logo.png" alt="" className="h-12 w-12" />
 												</div>
 												<div className="-bottom-1 -right-1 absolute flex h-6 w-6 items-center justify-center rounded-full bg-gradient-to-br from-green-400 to-green-600">
-													<span className="text-xs">✨</span>
+													<span className="text-xs">OK</span>
 												</div>
 											</div>
 										</div>

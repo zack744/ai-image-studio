@@ -131,7 +131,7 @@ export function ImagePreview({
 	};
 
 	// Build plugins array based on configuration
-	const enabledPlugins = [];
+	const enabledPlugins: any[] = [];
 	if (plugins.captions!==false) enabledPlugins.push(Captions);
 	if (plugins.counter!==false) enabledPlugins.push(Counter);
 	if (plugins.download!==false) enabledPlugins.push(Download);

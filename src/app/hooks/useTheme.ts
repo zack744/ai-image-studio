@@ -1,5 +1,5 @@
 import { THEME_COLORS } from "@/app/lib/theme-colors";
-import type { Theme, ThemeColor } from "@/server/db/schemas";
+import type { Theme, ThemeColor } from "@/app/types";
 import { useEffect } from "react";
 
 /**

@@ -1,4 +1,4 @@
-import type { Theme, ThemeColor } from "@/server/db/schemas";
+import type { Theme, ThemeColor } from "@/app/types";
 import { create } from "zustand";
 import { devtools, persist } from "zustand/middleware";
 

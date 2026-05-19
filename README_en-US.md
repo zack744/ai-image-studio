@@ -2,19 +2,18 @@
 
 <p align="center">
   <a href="https://github.com/monkeyWie/typix/releases"><img src="https://img.shields.io/github/v/release/monkeyWie/typix.svg" alt="Version"></a>
-  <a href="https://hub.docker.com/r/liwei2633/typix"><img src="https://img.shields.io/docker/v/liwei2633/typix?label=Docker&color=blue" alt="Docker"></a>
   <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%202.0-green.svg" alt="License"></a>
 </p>
 
 <p align="center"><a href="README.md">简体中文</a> | English</p>
 
-Typix is a modern, open-source, user-friendly, and privacy-secure AI tool focused on media content generation, providing creators with a one-stop generation experience, supporting one-click deployment to Cloudflare Workers and free use of Cloudflare Workers AI models.
+Typix is a modern, open-source, and user-friendly AI image generation tool, providing creators with a one-stop AI image generation experience. Built on a frontend SPA + Cloudflare Workers architecture with self-hosting support.
 
 ![](docs/public/images/demo/preview.png)
 
 ## 🎯 Quick Start
 
-No registration required, instantly experience premium AI image generation services, including cutting-edge models like Flux and SDXL (daily free quota limited, first come first served).
+No registration required — start generating AI images immediately.
 
 - [https://typix.art](https://typix.art)
   Production-grade stable version with cloud sync support
@@ -23,64 +22,34 @@ No registration required, instantly experience premium AI image generation servi
 
 ## ✨ Core Features
 
-Focus on AI image generation, turning creativity into visual art instantly
+Focused on AI image generation, turning creativity into visual art instantly
 
-- 📱 **Local First** - Prioritize local storage and offline functionality
 - 🏠 **Self-hosted** - Full control over your data and privacy
-- 🎁 **Free Generation** - Free image generation with Cloudflare Workers AI
-- ☁️ **One-click Deploy** - Quick deployment with Docker and Cloudflare Workers
-- 🤖 **Multi-model Support** - Support multiple AI models and service providers
-- 🔄 **Cloud Sync** - Seamlessly sync your content across all devices
+- 🎁 **Free & Open Source** - Apache 2.0 licensed, free to use and modify
+- ☁️ **Cloudflare Deployment** - Deploy to Cloudflare Workers with ease
+- 🤖 **Multi-model Support** - Connect to various AI models via provider configuration
+- 🔄 **Cloud Sync** - Sync your content across devices with account login
+- 🌐 **Internationalization** - Supports Chinese and English
 
-## 🔒 Data Security
+## 🚀 Deployment
 
-Typix puts your data security and privacy protection first:
-
-- **🛡️ Browser Local Storage** - Based on WASM SQLite technology, all data is completely stored in your browser
-- **🔐 Zero Data Upload** - Your creative content, settings and other sensitive data never leave your device
-- **🚫 No Server Dependencies** - Client mode requires no external server dependencies, ensuring data sovereignty
-- **🔄 Optional Cloud Sync** - Support for optional cloud sync functionality
-
-We protect both your creativity and privacy.
-
-## ⚡ Powered by Leading AI Models
-
-Integrated with cutting-edge AI models and services to provide the best image generation experience:
-
-- **Google** - Advanced AI models with cutting-edge image generation capabilities
-- **OpenAI** - Industry-leading AI technology
-- **Flux** - High-quality image generation models
-- **Fal** - Fast AI inference service
-- **Cloudflare** - Free AI model support
-
-More service providers and models are being integrated continuously.
-
-## 🚀 Quick Deployment
-
-### One-click Deploy to Cloudflare Workers (Recommended)
-
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/monkeyWie/typix)
-
-Cloudflare Workers deployment provides free access to Cloudflare AI image generation services.
-
-> After successful deployment, you'll get a `typix.xxx.workers.dev` domain to start using!
-
-### Docker Deployment
-
-```bash
-docker run --name typix -d -p 9999:9999 liwei2633/typix
-```
-
-### Node.js Deployment
+### Cloudflare Workers Deployment (Recommended)
 
 #### Prerequisites
 
+- [Cloudflare account](https://dash.cloudflare.com)
 - Node.js 20+
-- pnpm or npm
+- pnpm
 
-#### Deployment Steps
+#### Steps
 
-1. **Clone and install**
+1. **Create resources in Cloudflare Dashboard**
+
+   - Create a **D1** database named `typix-db`
+   - Create an **R2** bucket named `typix-images`
+   - Fill in the D1 `database_id` in `worker/wrangler.toml`
+
+2. **Clone and install dependencies**
 
 ```bash
 git clone https://github.com/monkeyWie/typix.git
@@ -88,30 +57,45 @@ cd typix
 pnpm install
 ```
 
-2. **Configure environment variables**
+3. **Configure environment variables**
 
 ```bash
-cp .env.node.example .env
-# Edit .env file to configure necessary parameters
+cp worker/.dev.vars.example worker/.dev.vars
+# Edit worker/.dev.vars with your JWT_SECRET and SUCHUANG_API_KEY
 ```
 
-3. **Database initialization**
+4. **Run database migration**
 
 ```bash
-pnpm db:generate
+cd worker
 pnpm db:migrate
 ```
 
-4. **Build project**
+5. **Deploy Worker**
 
 ```bash
-pnpm build:node
+cd worker
+pnpm deploy
 ```
 
-5. **Start service**
+6. **Deploy frontend static assets**
+
+Deploy the `dist/` directory to Cloudflare Pages or any static hosting service, and set the `VITE_WORKER_URL` environment variable to point to your Worker address.
+
+### Static File Hosting (frontend only, using remote API)
+
+If you only need to deploy the frontend while using a remote Worker API:
 
 ```bash
-node .bin/node.js
+pnpm install
+pnpm build
+# Deploy dist/ to Cloudflare Pages / Vercel / Netlify / etc.
+```
+
+Specify the Worker URL at build time:
+
+```bash
+VITE_WORKER_URL=https://your-worker.workers.dev pnpm build
 ```
 
 ## 🛠️ Development Documentation
@@ -120,25 +104,29 @@ node .bin/node.js
 
 **Frontend:**
 
-- **React 18** - Modern UI framework
+- **React 19** - Modern UI framework
 - **TypeScript** - Type-safe JavaScript
-- **Tailwind CSS** - Atomic CSS framework
+- **Tailwind CSS v4** - Atomic CSS framework
 - **shadcn/ui** - High-quality UI component library
-- **Tanstack Router** - Type-safe routing management
+- **TanStack Router** - Type-safe routing management
 - **Zustand** - Lightweight state management
-- **BetterAuth** - Modern authentication solution
+- **SWR** - Data fetching and caching
+- **react-i18next** - Internationalization
 
-**Backend:**
+**Backend (Cloudflare Worker):**
 
-- **Hono.js** - Lightweight web framework
-- **SQLite** - Embedded database
+- **Hono** - Lightweight web framework
+- **Cloudflare D1** - Serverless SQLite database
+- **Cloudflare R2** - Object storage
 - **Drizzle ORM** - Type-safe ORM
+- **Jose** - JWT authentication
 
 **Development Tools:**
 
 - **Vite** - Fast build tool
 - **Biome** - Code formatting and linting
-- **pnpm** - Package manager
+- **pnpm** - Package manager (workspace mode)
+- **Wrangler** - Cloudflare Workers CLI
 
 ### Local Development Guide
 
@@ -153,7 +141,7 @@ npm install -g pnpm
 
 #### Development Workflow
 
-1. **Clone project**
+1. **Clone the project**
 
 ```bash
 git clone https://github.com/monkeyWie/typix.git
@@ -166,38 +154,61 @@ cd typix
 pnpm install
 ```
 
-3. **Database initialization**
+3. **Configure Worker environment variables**
 
 ```bash
-# Generate database migration files
-pnpm db:generate
-
-# Execute migration
-pnpm db:migrate
+cp worker/.dev.vars.example worker/.dev.vars
+# Edit worker/.dev.vars with your actual SUCHUANG_API_KEY
 ```
 
-4. **Start development server**
+4. **Initialize local database**
 
 ```bash
-# Start frontend development server
+cd worker
+pnpm db:migrate:local
+cd ..
+```
+
+5. **Start development servers** (requires two terminals)
+
+```bash
+# Terminal 1: Start Worker backend (default http://localhost:8787)
+cd worker && pnpm dev
+
+# Terminal 2: Start frontend dev server (default http://localhost:5173)
 pnpm dev
 ```
+
+The frontend will automatically connect to the local Worker via `VITE_WORKER_URL` (defaults to `http://localhost:8787`).
 
 #### Project Structure
 
 ```
-src/
-├── app/                    # Frontend application
+├── src/app/                # Frontend SPA
+│   ├── ai/                 # AI provider type definitions
 │   ├── components/         # React components
-│   ├── hooks/             # Custom Hooks
-│   ├── routes/            # Route pages
-│   ├── stores/            # State management
-│   └── lib/               # Utility libraries
-├── server/                # Backend service
-│   ├── api/               # API routes
-│   ├── ai/                # AI provider integration
-│   ├── db/                # Database schemas
-│   └── service/           # Business logic
+│   │   ├── icon/           # Icon components
+│   │   ├── login/          # Login components
+│   │   ├── navigation/     # Navigation components
+│   │   └── ui/             # shadcn/ui components
+│   ├── hooks/              # Custom Hooks
+│   ├── i18n/               # i18n config and language files
+│   ├── lib/                # Utility libraries and API client
+│   ├── routes/             # Route pages
+│   │   ├── chat/           # Chat page
+│   │   └── settings/       # Settings page
+│   └── stores/             # Zustand state management
+├── worker/                 # Cloudflare Worker backend
+│   ├── src/
+│   │   ├── index.ts        # Hono app entry point
+│   │   ├── auth/           # JWT authentication
+│   │   ├── db/             # Database schema and instance
+│   │   ├── providers/      # Image generation providers
+│   │   └── routes/         # API routes
+│   ├── drizzle/            # Database migration files
+│   └── wrangler.toml       # Worker configuration
+├── docs/                   # Documentation site
+└── public/                 # Static assets
 ```
 
 ## 📄 License
@@ -207,14 +218,14 @@ This project is licensed under the [Apache License 2.0](https://www.apache.org/l
 You are free to:
 
 - ✅ Commercial use
-- ✅ Modify code
-- ✅ Distribute project
+- ✅ Modify the code
+- ✅ Distribute the project
 - ✅ Private use
 
 But you must:
 
 - 📝 Include copyright notice
-- 📝 Include license file
+- 📝 Include the license file
 - 📝 State significant changes
 
 ---

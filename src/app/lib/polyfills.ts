@@ -1,6 +1,3 @@
-// These polyfills are for handling APIs restricted by Secure Context, such as issues with accessing via lan IP or HTTP protocol.
-import "navigator.locks";
-
 if (!globalThis.crypto?.randomUUID) {
 	//@ts-ignore
 	globalThis.crypto.randomUUID = () => {
