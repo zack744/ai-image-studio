@@ -16,7 +16,7 @@ ENVIRONMENT = "development"
 ALLOWED_ORIGINS = "http://localhost:5173,http://127.0.0.1:5173"
 
 [env.production]
-vars = { ENVIRONMENT = "production", ALLOWED_ORIGINS = "https://typix.art,https://preview.typix.art" }
+vars = { ENVIRONMENT = "production", ALLOWED_ORIGINS = "https://typix-frontend.pages.dev,https://typix.art,https://preview.typix.art" }
 
 [[env.production.d1_databases]]
 binding = "DB"

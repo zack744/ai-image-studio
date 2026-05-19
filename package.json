@@ -9,7 +9,11 @@
 		"analyze": "vite build --mode analyze",
 		"fmt": "biome format --write .",
 		"lint": "biome lint .",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"deploy:worker": "wrangler deploy --config worker/wrangler.toml --env production",
+		"deploy:worker:dev": "wrangler deploy --config worker/wrangler.toml",
+		"deploy:frontend": "tsc -b && vite build && wrangler pages deploy dist --project-name typix-frontend",
+		"db:migrate": "wrangler d1 execute typix-db --config worker/wrangler.toml --remote --file"
 	},
 	"dependencies": {
 		"@bprogress/core": "^1.3.4",

@@ -33,23 +33,18 @@ Typix 是一款现代化、开源、易用的 AI 图像生成工具，为创作�
 
 ## 🚀 部署
 
-### Cloudflare Workers 部署（推荐）
+### Cloudflare 部署（后端 + 前端）
 
 #### 前置要求
 
 - [Cloudflare 账号](https://dash.cloudflare.com)
+- 已启用 **R2** 存储（[控制台](https://dash.cloudflare.com/?to=/:account/r2) 手动开启）
 - Node.js 20+
 - pnpm
 
 #### 部署步骤
 
-1. **在 Cloudflare 控制台创建资源**
-
-   - 创建 **D1** 数据库，名称为 `typix-db`
-   - 创建 **R2** 存储桶，名称为 `typix-images`
-   - 将 D1 database_id 填入 `worker/wrangler.toml`
-
-2. **克隆并安装依赖**
+**1. 克隆并安装依赖**
 
 ```bash
 git clone https://github.com/monkeyWie/typix.git
@@ -57,58 +52,61 @@ cd typix
 pnpm install
 ```
 
-3. **配置环境变量**
+**2. 登录 Wrangler**
 
 ```bash
-cp worker/.dev.vars.example worker/.dev.vars
-# 编辑 worker/.dev.vars，填入 JWT_SECRET 和 SUCHUANG_API_KEY
+npx wrangler login
 ```
 
-生产环境不要把密钥写入 `wrangler.toml`，请使用 Wrangler secrets：
+**3. 创建 D1 数据库和 R2 存储桶**
 
 ```bash
-cd worker
-wrangler secret put JWT_SECRET -e production
-wrangler secret put SUCHUANG_API_KEY -e production
-# 如需公开访问 R2 图片，也需要配置 R2_PUBLIC_URL
-wrangler secret put R2_PUBLIC_URL -e production
+npx wrangler d1 create typix-db
+npx wrangler r2 bucket create typix-images
 ```
 
-同时将 `worker/wrangler.toml` 中 D1 的 `database_id` 替换为 Cloudflare 控制台中的真实数据库 ID。
+**4. 配置 wrangler.toml**
 
-4. **执行数据库迁移**
+将 D1 `database_id` 填入 `worker/wrangler.toml` 中的两处（顶层和 `[env.production]` 下），替换 `local-dev`。
+
+**5. 设置 JWT 密钥**
 
 ```bash
-cd worker
-pnpm db:migrate
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" | npx wrangler secret put JWT_SECRET --config worker/wrangler.toml
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))" | npx wrangler secret put JWT_SECRET --config worker/wrangler.toml --env production
 ```
 
-5. **部署 Worker**
+**6. 执行数据库迁移**
 
 ```bash
-cd worker
-pnpm deploy
+npx wrangler d1 execute typix-db --config worker/wrangler.toml --remote --file=./worker/drizzle/migrations/0000_initial.sql
 ```
 
-6. **部署前端静态资源**
-
-将 `dist/` 目录部署到 Cloudflare Pages 或任意静态托管服务，并设置环境变量 `VITE_WORKER_URL` 指向 Worker 地址。
-
-### 静态文件托管（仅前端，使用远程 API）
-
-如果你只需要部署前端并通过远程 Worker API 使用，可以构建后部署到任意静态托管：
+**7. 创建 Pages 项目并部署**
 
 ```bash
-pnpm install
-pnpm build
-# 将 dist/ 部署到 Cloudflare Pages / Vercel / Netlify 等
+npx wrangler pages project create typix-frontend --production-branch main
+pnpm deploy:frontend
 ```
 
-构建时通过环境变量指定 Worker 地址：
+**8. 部署 Worker**
 
 ```bash
-VITE_WORKER_URL=https://your-worker.workers.dev pnpm build
+pnpm deploy:worker
 ```
+
+**9. 将 Pages URL 加入 CORS 白名单**
+
+Pages 部署后会得到 `https://<hash>.typix-frontend.pages.dev` 地址，将其加入 `worker/wrangler.toml` 的 `[env.production]` → `ALLOWED_ORIGINS`，然后重新 `pnpm deploy:worker`。
+
+#### 快捷部署命令
+
+| 命令 | 说明 |
+|------|------|
+| `pnpm deploy:worker` | 部署 Worker 到生产环境 |
+| `pnpm deploy:worker:dev` | 部署 Worker 到开发环境 |
+| `pnpm deploy:frontend` | 构建前端 + 部署到 Pages |
+| `pnpm db:migrate <文件>` | 执行远程 D1 迁移 |
 
 ## 🛠️ 开发文档
 
