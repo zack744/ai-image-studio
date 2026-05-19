@@ -22,6 +22,7 @@ export interface ProviderModel {
   id: string;
   name: string;
   ability: "t2i" | "i2i";
+  maxInputImages?: number;
   supportedAspectRatios?: string[];
 }
 

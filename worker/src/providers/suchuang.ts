@@ -60,12 +60,19 @@ export const suchuangProvider: ImageProvider = {
   models: [{
     id: "suchuang-ai",
     name: "速创AI",
-    ability: "t2i",
+    ability: "i2i",
+    maxInputImages: 1,
     supportedAspectRatios: ["1:1", "16:9", "9:16", "4:3", "3:4"],
   }],
 
   async submit(prompt: string, options: GenerateOptions, apiKey: string): Promise<string> {
     const size = aspectRatioToSize(options.aspectRatio);
+    const body = {
+      prompt,
+      size,
+      n: options.n || 1,
+      ...(options.images?.length ? { urls: options.images } : {}),
+    };
 
     const resp = await fetch(SUBMIT_URL, {
       method: "POST",
@@ -73,7 +80,7 @@ export const suchuangProvider: ImageProvider = {
         "Content-Type": "application/json",
         "Authorization": apiKey,
       },
-      body: JSON.stringify({ prompt, size, n: options.n || 1 }),
+      body: JSON.stringify(body),
     });
 
     if (!resp.ok) {

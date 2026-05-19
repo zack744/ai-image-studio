@@ -6,7 +6,7 @@ import { users } from "../db/schema";
 import type { AppEnv } from "../types";
 
 const JWT_EXPIRATION = "7d";
-const PASSWORD_ITERATIONS = 310_000;
+const PASSWORD_ITERATIONS = 100_000;
 const PASSWORD_SALT_BYTES = 16;
 const PASSWORD_KEY_BITS = 256;
 

@@ -56,6 +56,7 @@ generateRoutes.post("/", async (c) => {
   try {
     const taskId = await provider.submit(generation.prompt, {
       prompt: generation.prompt,
+      images: params.images || [],
       aspectRatio: params.aspectRatio,
       n: params.imageCount || 1,
     }, apiKey);

@@ -17,6 +17,18 @@ app.use("*", cors({
   origin: (origin, c) => {
     if (!origin) return null;
 
+    const originHost = (() => {
+      try {
+        return new URL(origin).hostname;
+      } catch {
+        return "";
+      }
+    })();
+
+    if (originHost === "typix-frontend.pages.dev" || originHost.endsWith(".typix-frontend.pages.dev")) {
+      return origin;
+    }
+
     const allowedOrigins = (c.env.ALLOWED_ORIGINS || "")
       .split(",")
       .map((item: string) => item.trim())

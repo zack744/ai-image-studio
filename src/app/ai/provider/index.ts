@@ -14,7 +14,8 @@ export const AI_PROVIDERS: AiProvider[] = [
 			{
 				id: SUCHUANG_MODEL_ID,
 				name: "速创AI",
-				ability: "t2i",
+				ability: "i2i",
+				maxInputImages: 1,
 				enabledByDefault: true,
 				supportedAspectRatios: ["1:1", "16:9", "9:16", "4:3", "3:4"],
 			},

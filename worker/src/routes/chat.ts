@@ -92,6 +92,20 @@ async function storeImageData(db: DbType, env: Env, userId: string, dataUrl: str
   return file!;
 }
 
+function getPublicImageUrls(attachments: Array<{ url: string | null }>): string[] {
+  return attachments
+    .map((attachment) => attachment.url)
+    .filter((url): url is string => Boolean(url && /^https?:\/\//.test(url)));
+}
+
+function hasIncomingImages(req: { attachments?: Array<unknown>; images?: string[] }): boolean {
+  return Boolean((req.attachments && req.attachments.length > 0) || (req.images && req.images.length > 0));
+}
+
+function canCreatePublicImageUrls(env: Env): boolean {
+  return Boolean(env.R2 && env.R2_PUBLIC_URL);
+}
+
 export const chatRoutes = new Hono<AppEnv>();
 
 chatRoutes.get("/", async (c) => {
@@ -171,6 +185,9 @@ chatRoutes.post("/", async (c) => {
   }
 
   const req = parsed.data;
+  if (hasIncomingImages(req) && !canCreatePublicImageUrls(c.env)) {
+    return c.json({ error: "R2_PUBLIC_URL is required for image-to-image generation" }, 500);
+  }
 
   const [chat] = await db.insert(chats).values({
     userId,
@@ -261,6 +278,10 @@ chatRoutes.post("/:chatId/messages", async (c) => {
     return c.json({ error: "Chat not found" }, 404);
   }
 
+  if (hasIncomingImages(parsed.data) && !canCreatePublicImageUrls(c.env)) {
+    return c.json({ error: "R2_PUBLIC_URL is required for image-to-image generation" }, 500);
+  }
+
   const result = await createMessageInternal(db, c.env, userId, parsed.data);
   return c.json(result);
 });
@@ -306,6 +327,10 @@ export async function createMessageInternal(
   const attachmentResults: Array<{ id: string; type: string; url: string | null }> = [];
 
   if (req.attachments && req.attachments.length > 0) {
+    if (!env.R2 || !env.R2_PUBLIC_URL) {
+      throw new Error("R2_PUBLIC_URL_REQUIRED");
+    }
+
     for (let i = 0; i < req.attachments.length; i++) {
       const att = req.attachments[i];
       const file = await storeImageData(db, env, userId, att.data);
@@ -326,6 +351,10 @@ export async function createMessageInternal(
     }
     // Support deprecated images field
   } else if (req.images && req.images.length > 0) {
+    if (!env.R2 || !env.R2_PUBLIC_URL) {
+      throw new Error("R2_PUBLIC_URL_REQUIRED");
+    }
+
     for (let i = 0; i < req.images.length; i++) {
       const data = req.images[i];
       const file = await storeImageData(db, env, userId, data);
@@ -347,6 +376,7 @@ export async function createMessageInternal(
   }
 
   await db.update(chats).set({ updatedAt: now }).where(eq(chats.id, req.chatId));
+  const imageUrls = getPublicImageUrls(attachmentResults);
 
   const [generation] = await db.insert(messageGenerations).values({
     userId,
@@ -358,6 +388,7 @@ export async function createMessageInternal(
     parameters: {
       imageCount: req.imageCount || 1,
       aspectRatio: req.aspectRatio,
+      images: imageUrls,
     },
   }).returning();
 
