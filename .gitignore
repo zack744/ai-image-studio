@@ -32,3 +32,5 @@ worker/.dev.vars
 worker/.wrangler/
 .bin
 /.files/
+
+# env.env.production
