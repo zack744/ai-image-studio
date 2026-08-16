@@ -42,6 +42,10 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 			try {
 				const userData = await apiClient.auth.getMe();
 				set({ user: userData, loaded: true, error: null, isLoading: false });
+				// Pull server-side provider configs (API keys) so they persist across devices/cache clears
+				void import("@/app/hooks/useService").then(({ syncProvidersFromServer }) =>
+					syncProvidersFromServer(),
+				);
 			} catch (e: any) {
 				if (e?.code === "unauthorized") {
 					apiClient.clearToken();

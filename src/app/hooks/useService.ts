@@ -50,6 +50,30 @@ export function getProviderApiKey(providerId: string): string | undefined {
 	return getProviderStoredSettings(providerId).apiKey;
 }
 
+// Pull the current user's server-side provider configs into local overrides.
+// Called once after login / initial auth load so keys persist across devices & cache clears.
+export async function syncProvidersFromServer(): Promise<void> {
+	if (!apiClient.getToken()) return;
+	try {
+		const serverProviders = await apiClient.providers.list();
+		if (!Array.isArray(serverProviders)) return;
+
+		const overrides = readProviderOverrides();
+		for (const sp of serverProviders) {
+			const providerId = sp.providerId;
+			const current = overrides[providerId] || {};
+			overrides[providerId] = {
+				...current,
+				enabled: sp.enabled ?? current.enabled,
+				settings: sp.settings && Object.keys(sp.settings).length > 0 ? sp.settings : current.settings,
+			};
+		}
+		writeProviderOverrides(overrides);
+	} catch (e) {
+		console.error("Failed to sync providers from server:", e);
+	}
+}
+
 function getProvidersWithOverrides() {
 	const overrides = readProviderOverrides();
 	return AI_PROVIDERS.map((provider) => {
@@ -151,12 +175,26 @@ const aiService = {
 	updateAiProvider: async (params: { providerId: string; enabled?: boolean; settings?: Record<string, any> }) => {
 		const overrides = readProviderOverrides();
 		const current = overrides[params.providerId] || {};
-		overrides[params.providerId] = {
+		const next = {
 			...current,
 			enabled: params.enabled ?? current.enabled,
 			settings: params.settings ?? current.settings,
 		};
+		overrides[params.providerId] = next;
 		writeProviderOverrides(overrides);
+
+		// Sync to the server when logged in (persists keys across devices / cache clears)
+		if (apiClient.getToken()) {
+			try {
+				await apiClient.providers.save(params.providerId, {
+					enabled: next.enabled,
+					settings: next.settings,
+				});
+			} catch (e) {
+				console.error("Failed to sync provider settings to server:", e);
+			}
+		}
+
 		return getProvidersWithOverrides().find((provider) => provider.id === params.providerId) || null;
 	},
 	updateAiModel: async (params: { providerId: string; modelId: string; enabled: boolean }) => {

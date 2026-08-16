@@ -229,12 +229,31 @@ async function getAiProviders() {
 	return [];
 }
 
+// Provider config API (per-user, stored server-side in ai_providers)
+async function listProviderConfigs() {
+	return request<Array<{ providerId: string; enabled: boolean; settings: Record<string, any> }>>("/api/providers");
+}
+
+async function saveProviderConfig(providerId: string, params: { enabled?: boolean; settings?: Record<string, any> }) {
+	return request<{ providerId: string; enabled: boolean; settings: Record<string, any> }>(`/api/providers/${encodeURIComponent(providerId)}`, {
+		method: "PUT",
+		body: params as any,
+	});
+}
+
+async function deleteProviderConfig(providerId: string) {
+	return request<{ success: boolean }>(`/api/providers/${encodeURIComponent(providerId)}`, {
+		method: "DELETE",
+	});
+}
+
 export const apiClient = {
 	auth: { register, login, getMe, getToken, clearToken },
 	chats: { getChats, getChatById, createChat, updateChat, deleteChat, createMessage, deleteMessage },
 	generate: { submit: submitGenerate, getStatus: getGenerationStatus, regenerate: regenerateMessage },
 	images: { upload: uploadImage, getUrl: getImageUrl },
 	ai: { getProviders: getAiProviders },
+	providers: { list: listProviderConfigs, save: saveProviderConfig, delete: deleteProviderConfig },
 	getToken,
 	setToken,
 	clearToken,

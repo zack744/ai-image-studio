@@ -7,6 +7,7 @@ import { authRoutes } from "./routes/auth";
 import { chatRoutes } from "./routes/chat";
 import { generateRoutes } from "./routes/generate";
 import { imageRoutes } from "./routes/image";
+import { providerRoutes } from "./routes/provider";
 import type { AppEnv } from "./types";
 
 initProviders();
@@ -67,10 +68,12 @@ app.route("/api/auth", authRoutes);
 app.use("/api/chats/*", authMiddleware);
 app.use("/api/generate/*", authMiddleware);
 app.use("/api/images/*", authMiddleware);
+app.use("/api/providers/*", authMiddleware);
 
 app.route("/api/chats", chatRoutes);
 app.route("/api/generate", generateRoutes);
 app.route("/api/images", imageRoutes);
+app.route("/api/providers", providerRoutes);
 
 // Health check
 app.get("/api/health", (c) => c.json({ ok: true }));

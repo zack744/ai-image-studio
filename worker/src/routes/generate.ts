@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { eq, and } from "drizzle-orm";
-import { messageGenerations, messages, files } from "../db/schema";
+import { messageGenerations, messages, files, aiProviders } from "../db/schema";
 import { getProvider } from "../providers";
 import { logger } from "../lib/logger";
 import type { AppEnv } from "../types";
@@ -30,7 +30,17 @@ generateRoutes.post("/", async (c) => {
   }
 
   const params = (generation.parameters as any) || {};
-  const apiKey = body?.apiKey;
+
+  // API key resolution order: request body > user's saved provider config (ai_providers)
+  let apiKey = body?.apiKey;
+  if (!apiKey) {
+    const savedProvider = await db.query.aiProviders.findFirst({
+      where: and(eq(aiProviders.userId, userId), eq(aiProviders.providerId, generation.provider)),
+    });
+    const savedKey = (savedProvider?.settings as any)?.apiKey;
+    if (savedKey) apiKey = savedKey;
+  }
+
   if (!apiKey) {
     await db.update(messageGenerations).set({
       status: "failed",
@@ -122,7 +132,13 @@ generateRoutes.get("/:id", async (c) => {
 
     if (provider && params?.taskId) {
       try {
-        const apiKey = (params as any)?.apiKey;
+        let apiKey = (params as any)?.apiKey;
+        if (!apiKey) {
+          const savedProvider = await db.query.aiProviders.findFirst({
+            where: and(eq(aiProviders.userId, userId), eq(aiProviders.providerId, generation.provider)),
+          });
+          apiKey = (savedProvider?.settings as any)?.apiKey;
+        }
         if (!apiKey) {
           await db.update(messageGenerations).set({
             status: "failed",
