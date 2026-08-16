@@ -2,7 +2,7 @@
 
 <p align="center">
   <a href="https://github.com/zack744/ai-image-studio/releases"><img src="https://img.shields.io/github/v/release/zack744/ai-image-studio.svg" alt="Version"></a>
-  <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%202.0-green.svg" alt="License"></a>
+  <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License"></a>
 </p>
 
 <p align="center"><a href="README.md">简体中文</a> | English</p>
@@ -25,7 +25,7 @@ No registration required — start generating AI images immediately.
 Focused on AI image generation, turning creativity into visual art instantly
 
 - 🏠 **Self-hosted** - Full control over your data and privacy
-- 🎁 **Free & Open Source** - Apache 2.0 licensed, free to use and modify
+- 🎁 **Free & Open Source** - MIT licensed, free to use and modify
 - ☁️ **Cloudflare Deployment** - Deploy to Cloudflare Workers with ease
 - 🤖 **Multi-model Support** - Connect to various AI models via provider configuration (速创AI, WaveSpeed)
 - 🔄 **Cloud Sync** - Sync your content across devices with account login
@@ -224,7 +224,7 @@ The frontend will automatically connect to the local Worker via `VITE_WORKER_URL
 
 ## 📄 License
 
-This project is licensed under the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0).
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 You are free to:
 
@@ -237,7 +237,6 @@ But you must:
 
 - 📝 Include copyright notice
 - 📝 Include the license file
-- 📝 State significant changes
 
 ---
 

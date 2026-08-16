@@ -5,7 +5,7 @@
   <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-5-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
   <img alt="Vite" src="https://img.shields.io/badge/Vite-6-646CFF?style=for-the-badge&logo=vite&logoColor=white" />
   <img alt="Cloudflare" src="https://img.shields.io/badge/Cloudflare%20Workers-Backend-F38020?style=for-the-badge&logo=cloudflare&logoColor=white" />
-  <img alt="Apache-2.0" src="https://img.shields.io/badge/License-Apache%202.0-D22128?style=for-the-badge" />
+  <img alt="MIT" src="https://img.shields.io/badge/License-MIT-11AB00?style=for-the-badge" />
 </p>
 
 **AI Image Studio** 是一个自托管的 AI 图像生成工具，采用前端 SPA + Cloudflare Workers 后端架构，支持接入速创AI、WaveSpeed 等多服务商生图能力：输入一句话，生成一张图。
@@ -108,4 +108,4 @@ pnpm lint         # biome lint
 
 ## License
 
-Apache 2.0，见 [LICENSE](LICENSE)。
+MIT，见 [LICENSE](LICENSE)。
