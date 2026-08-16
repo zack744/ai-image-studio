@@ -10,8 +10,6 @@
 
 **AI Image Studio** 是一个自托管的 AI 图像生成工具，采用前端 SPA + Cloudflare Workers 后端架构，支持接入速创AI、WaveSpeed 等多服务商生图能力：输入一句话，生成一张图。
 
-本项目是上游开源项目 [monkeyWie/typix](https://github.com/monkeyWie/typix) 的 fork/rewrite，深度改造了后端 provider 层，接入速创AI 与 WaveSpeed 生图能力，并适配 Cloudflare Pages + Workers 自托管部署。
-
 **Live**：[ai-image-studio-frontend.pages.dev/chat](https://ai-image-studio-frontend.pages.dev/chat)
 
 ## ✨ 特性

@@ -9,8 +9,6 @@
 
 AI Image Studio is a modern, open-source, and user-friendly AI image generation tool, providing creators with a one-stop AI image generation experience. Built on a frontend SPA + Cloudflare Workers architecture with self-hosting support, it integrates multiple providers including 速创AI and WaveSpeed for AI image generation.
 
-This project is a fork/rewrite of the upstream [monkeyWie/typix](https://github.com/monkeyWie/typix), with a deeply refactored backend provider layer that connects 速创AI and WaveSpeed generation capabilities, adapted for Cloudflare Pages + Workers self-hosted deployment.
-
 ![](docs/public/images/demo/preview.png)
 
 ## 🎯 Quick Start
@@ -18,7 +16,6 @@ This project is a fork/rewrite of the upstream [monkeyWie/typix](https://github.
 No registration required — start generating AI images immediately.
 
 - [https://github.com/zack744/ai-image-studio](https://github.com/zack744/ai-image-studio)
-  Fork/rewrite of the original Typix project, with multi-provider support (速创AI, WaveSpeed)
 
 ## ✨ Core Features
 
