@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-	title: "Typix - AI Image Generator",
+	title: "AI Image Studio - AI Image Generator",
 	description: "Transform your words into stunning visuals with our advanced AI image generation technology.",
 };
 

@@ -206,6 +206,21 @@
 					"description": "Suchuang AI - High-quality AI image generation with multiple aspect ratio support."
 				}
 			}
+		},
+		"wavespeed": {
+			"description": "AI image generation powered by WaveSpeed",
+			"settings": {
+				"apiKey": {
+					"title": "API Key",
+					"description": "Your WaveSpeed API key for authentication (get it at wavespeed.ai/accesskey)",
+					"placeholder": "Enter your WaveSpeed API key"
+				}
+			},
+			"models": {
+				"wavespeed-ai/z-image/turbo": {
+					"description": "Z-Image Turbo - WaveSpeed's fast image generation model."
+				}
+			}
 		}
 	}
 }

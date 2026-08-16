@@ -19,7 +19,7 @@ export async function generateMetadata({
 	const metadata = await getTranslations({ locale, namespace: "metadata" });
 	const nav = await getTranslations({ locale, namespace: "nav" });
 
-	const title = `Typix - ${nav("slogan")}`;
+	const title = `AI Image Studio - ${nav("slogan")}`;
 	const description = metadata("description");
 	const keywords = metadata("keywords");
 	const siteUrl = "https://typix.art";
@@ -28,9 +28,9 @@ export async function generateMetadata({
 		title,
 		description,
 		keywords,
-		authors: [{ name: "Typix AI" }],
-		creator: "Typix AI",
-		publisher: "Typix AI",
+		authors: [{ name: "AI Image Studio" }],
+		creator: "AI Image Studio",
+		publisher: "AI Image Studio",
 		formatDetection: {
 			email: false,
 			address: false,
@@ -49,7 +49,7 @@ export async function generateMetadata({
 			locale,
 			title,
 			description,
-			siteName: "Typix AI",
+			siteName: "AI Image Studio",
 			url: siteUrl,
 			images: [
 				{
@@ -64,7 +64,7 @@ export async function generateMetadata({
 			card: "summary_large_image",
 			title,
 			description,
-			creator: "@TypixAI",
+			creator: "@AIImageStudio",
 			images: ["/og-image.jpg"],
 		},
 		robots: {

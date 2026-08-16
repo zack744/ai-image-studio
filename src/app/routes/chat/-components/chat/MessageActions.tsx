@@ -134,8 +134,8 @@ export function MessageActions({
 			// Set filename: single image doesn't need index, multiple images include index
 			const filename =
 				imageUrls?.length === 1
-					? `typix-image-${timestamp}.${extension}`
-					: `typix-image-${timestamp}-${index + 1}.${extension}`;
+					? `ai-image-${timestamp}.${extension}`
+					: `ai-image-${timestamp}-${index + 1}.${extension}`;
 
 			link.download = filename;
 
@@ -230,7 +230,7 @@ export function MessageActions({
 
 			const link = document.createElement("a");
 			link.href = zipUrl;
-			link.download = `typix-images-${timestamp}.zip`;
+			link.download = `ai-images-${timestamp}.zip`;
 			link.style.display = "none";
 
 			document.body.appendChild(link);

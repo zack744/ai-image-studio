@@ -13,7 +13,7 @@ export const commonAspectRatioSizes: Record<AspectRatio, { width: number; height
 	"3:4": { width: 1200, height: 1600 },
 };
 
-export const TypixGenerateRequestSchema = z.object({
+export const AiImageStudioGenerateRequestSchema = z.object({
 	providerId: z.string(),
 	modelId: z.string(),
 	prompt: z.string(),
@@ -22,9 +22,9 @@ export const TypixGenerateRequestSchema = z.object({
 	aspectRatio: z.enum(aspectRatios).optional(), // Optional aspect ratio
 });
 
-export type TypixGenerateRequest = z.infer<typeof TypixGenerateRequestSchema>;
+export type AiImageStudioGenerateRequest = z.infer<typeof AiImageStudioGenerateRequestSchema>;
 
-export type TypixChatApiResponse = {
+export type AiImageStudioChatApiResponse = {
 	errorReason?: ErrorReason; // Optional error reason if generation failed
 	images: string[]; // Array of generated image base64 Data URI
 };

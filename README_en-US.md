@@ -1,13 +1,15 @@
-# Typix - Type To Pixels
+# AI Image Studio
 
 <p align="center">
-  <a href="https://github.com/monkeyWie/typix/releases"><img src="https://img.shields.io/github/v/release/monkeyWie/typix.svg" alt="Version"></a>
+  <a href="https://github.com/zack744/ai-image-studio/releases"><img src="https://img.shields.io/github/v/release/zack744/ai-image-studio.svg" alt="Version"></a>
   <a href="https://www.apache.org/licenses/LICENSE-2.0"><img src="https://img.shields.io/badge/license-Apache%202.0-green.svg" alt="License"></a>
 </p>
 
 <p align="center"><a href="README.md">简体中文</a> | English</p>
 
-Typix is a modern, open-source, and user-friendly AI image generation tool, providing creators with a one-stop AI image generation experience. Built on a frontend SPA + Cloudflare Workers architecture with self-hosting support.
+AI Image Studio is a modern, open-source, and user-friendly AI image generation tool, providing creators with a one-stop AI image generation experience. Built on a frontend SPA + Cloudflare Workers architecture with self-hosting support, it integrates multiple providers including 速创AI and WaveSpeed for AI image generation.
+
+This project is a fork/rewrite of the upstream [monkeyWie/typix](https://github.com/monkeyWie/typix), with a deeply refactored backend provider layer that connects 速创AI and WaveSpeed generation capabilities, adapted for Cloudflare Pages + Workers self-hosted deployment.
 
 ![](docs/public/images/demo/preview.png)
 
@@ -15,10 +17,8 @@ Typix is a modern, open-source, and user-friendly AI image generation tool, prov
 
 No registration required — start generating AI images immediately.
 
-- [https://typix.art](https://typix.art)
-  Production-grade stable version with cloud sync support
-- [https://preview.typix.art](https://preview.typix.art)
-  Get early access to the latest features and improvements
+- [https://github.com/zack744/ai-image-studio](https://github.com/zack744/ai-image-studio)
+  Fork/rewrite of the original Typix project, with multi-provider support (速创AI, WaveSpeed)
 
 ## ✨ Core Features
 
@@ -27,7 +27,7 @@ Focused on AI image generation, turning creativity into visual art instantly
 - 🏠 **Self-hosted** - Full control over your data and privacy
 - 🎁 **Free & Open Source** - Apache 2.0 licensed, free to use and modify
 - ☁️ **Cloudflare Deployment** - Deploy to Cloudflare Workers with ease
-- 🤖 **Multi-model Support** - Connect to various AI models via provider configuration
+- 🤖 **Multi-model Support** - Connect to various AI models via provider configuration (速创AI, WaveSpeed)
 - 🔄 **Cloud Sync** - Sync your content across devices with account login
 - 🌐 **Internationalization** - Supports Chinese and English
 
@@ -45,42 +45,54 @@ Focused on AI image generation, turning creativity into visual art instantly
 
 1. **Create resources in Cloudflare Dashboard**
 
-   - Create a **D1** database named `typix-db`
-   - Create an **R2** bucket named `typix-images`
+   - Create a **D1** database and an **R2** bucket (resource names are configured in `worker/wrangler.toml` — D1 `database_name` and R2 `bucket_name`)
    - Fill in the D1 `database_id` in `worker/wrangler.toml`
 
 2. **Clone and install dependencies**
 
 ```bash
-git clone https://github.com/monkeyWie/typix.git
-cd typix
+git clone https://github.com/zack744/ai-image-studio.git
+cd ai-image-studio
 pnpm install
 ```
 
-3. **Configure environment variables**
+3. **Log in to Wrangler**
 
 ```bash
-cp worker/.dev.vars.example worker/.dev.vars
-# Edit worker/.dev.vars with your JWT_SECRET and SUCHUANG_API_KEY
+npx wrangler login
 ```
 
-4. **Run database migration**
+4. **Set backend secrets** (JWT is required; provider API keys are optional — see below)
 
 ```bash
-cd worker
+npx wrangler secret put JWT_SECRET --config worker/wrangler.toml --env production
+# npx wrangler secret put SUCHUANG_API_KEY --config worker/wrangler.toml --env production
+# npx wrangler secret put WAVESPEED_API_KEY --config worker/wrangler.toml --env production
+```
+
+5. **Run database migration**
+
+```bash
 pnpm db:migrate
 ```
 
-5. **Deploy Worker**
+6. **Deploy the Worker**
 
 ```bash
-cd worker
-pnpm deploy
+pnpm deploy:worker
 ```
 
-6. **Deploy frontend static assets**
+7. **Configure the frontend production env and deploy**
 
-Deploy the `dist/` directory to Cloudflare Pages or any static hosting service, and set the `VITE_WORKER_URL` environment variable to point to your Worker address.
+```bash
+cp .env.production.example .env.production   # set VITE_WORKER_URL to your Worker address
+pnpm deploy:frontend
+```
+
+### Connecting image-generation services (API keys)
+
+- **Server-side keys (optional)**: set `SUCHUANG_API_KEY` / `WAVESPEED_API_KEY` via `wrangler secret put`; the frontend works without any configuration.
+- **Per-user keys via the settings page (recommended, never hardcoded)**: after logging in, go to "Settings → AI Providers", enable a provider and enter its API key. The key stays in browser local storage and is passed to the backend with each generation request — it is never committed to the repository.
 
 ### Static File Hosting (frontend only, using remote API)
 
@@ -144,8 +156,8 @@ npm install -g pnpm
 1. **Clone the project**
 
 ```bash
-git clone https://github.com/monkeyWie/typix.git
-cd typix
+git clone https://github.com/zack744/ai-image-studio.git
+cd ai-image-studio
 ```
 
 2. **Install dependencies**

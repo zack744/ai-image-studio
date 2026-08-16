@@ -23,6 +23,23 @@ function RootComponent() {
   // Apply theme and theme color with automatic system theme detection
   useThemeManager(theme, themeColor, setTheme);
 
+  // Preconnect to the Worker API origin to cut connection setup latency
+  useEffect(() => {
+    const workerUrl = (import.meta.env.VITE_WORKER_URL as string | undefined) || "";
+    if (!workerUrl) return;
+    try {
+      const { origin } = new URL(workerUrl);
+      if (!document.querySelector(`link[rel="preconnect"][href="${origin}"]`)) {
+        const preconnect = document.createElement("link");
+        preconnect.rel = "preconnect";
+        preconnect.href = origin;
+        document.head.appendChild(preconnect);
+      }
+    } catch {
+      // ignore invalid worker URL
+    }
+  }, []);
+
   // Conditionally load Google Analytics when an ID is provided
   useEffect(() => {
     const gaId = import.meta.env.GOOGLE_ANALYTICS_ID as string | undefined;

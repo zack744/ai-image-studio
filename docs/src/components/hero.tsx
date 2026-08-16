@@ -179,7 +179,7 @@ export function Hero() {
 							</motion.a>
 
 							<motion.a
-								href="https://github.com/monkeyWie/typix"
+								href="https://github.com/zack744/ai-image-studio"
 								target="_blank"
 								className="glow flex flex-1 items-center justify-center gap-3 rounded-2xl border border-border/20 bg-card/50 px-8 py-5 font-semibold text-foreground text-xl backdrop-blur-sm transition-all duration-300 hover:bg-card/70"
 								whileHover={{

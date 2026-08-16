@@ -1,6 +1,6 @@
 {
-  "name": "Typix AI - AI Image Generation",
-  "short_name": "Typix AI",
+  "name": "AI Image Studio - AI Image Generation",
+  "short_name": "AI Image Studio",
   "description": "AI image generation tool featuring Nano Banana, Flux Kontext, and GPT-4o models",
   "start_url": "/",
   "display": "standalone",

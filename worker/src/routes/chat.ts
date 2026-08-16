@@ -147,6 +147,9 @@ chatRoutes.get("/:id", async (c) => {
       });
       if (gen) {
         generation = { ...gen };
+        if (gen.parameters && typeof gen.parameters === "object") {
+          generation.parameters = { ...gen.parameters, apiKey: undefined };
+        }
         // Resolve resultUrls from fileIds for completed generations
         if (gen.status === "completed" && gen.fileIds) {
           const genFileIds = gen.fileIds as string[];

@@ -15,7 +15,7 @@
   },
   "hero": {
     "title": "Chat Your Way to Amazing Images",
-    "subtitle": "Powered by Nano Banana, Flux Kontext, and GPT-4o models. Simply describe what you want to see, and watch as Typix transforms your words into stunning AI-generated images.",
+    "subtitle": "Powered by Nano Banana, Flux Kontext, and GPT-4o models. Simply describe what you want to see, and watch as AI Image Studio transforms your words into stunning AI-generated images.",
     "primaryBtn": "TRY NOW",
     "stats": {
       "images": "Images Created",
@@ -98,10 +98,10 @@
   },
   "preview": {
     "title": "Create Anywhere",
-    "subtitle": "Experience Typix's powerful AI image generation across all your devices."
+    "subtitle": "Experience AI Image Studio's powerful AI image generation across all your devices."
   },
   "keyFeatures": {
-    "title": "Why Choose Typix?",
+    "title": "Why Choose AI Image Studio?",
     "subtitle": "Built with privacy, performance, and cost-efficiency in mind"
   },
   "models": {
@@ -145,7 +145,7 @@
   "footer": {
     "subtitle": "AI Image Generator",
     "description": "Transform your words into stunning visuals with our advanced AI image generation technology.",
-    "copyright": "© {year} Typix AI. All rights reserved.",
+    "copyright": "© {year} AI Image Studio. All rights reserved.",
     "categories": {
       "product": "Product",
       "community": "Community",

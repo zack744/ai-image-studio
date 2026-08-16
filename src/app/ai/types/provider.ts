@@ -1,5 +1,5 @@
 import { ServiceException } from "@/app/lib/exception";
-import type { TypixChatApiResponse, TypixGenerateRequest } from "./api";
+import type { AiImageStudioChatApiResponse, AiImageStudioGenerateRequest } from "./api";
 import type { Ability, AiModel } from "./model";
 
 export type ApiProviderSettingsItemValue = string | number | boolean;
@@ -27,7 +27,7 @@ export interface AiProvider {
 	models: AiModel[];
 
 	parseSettings<T>(settings: ApiProviderSettings): T;
-	generate: (request: TypixGenerateRequest, settings: ApiProviderSettings) => Promise<TypixChatApiResponse>;
+	generate: (request: AiImageStudioGenerateRequest, settings: ApiProviderSettings) => Promise<AiImageStudioChatApiResponse>;
 }
 
 // Generic type-safe settings accessor
@@ -144,7 +144,7 @@ export function findModel(provider: AiProvider, modelId: string): AiModel {
 	return model;
 }
 
-export function chooseAblility(request: TypixGenerateRequest, ability: Ability): Ability {
+export function chooseAblility(request: AiImageStudioGenerateRequest, ability: Ability): Ability {
 	if (ability === "t2i") {
 		return ability;
 	}

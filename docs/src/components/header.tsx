@@ -18,13 +18,13 @@ interface NavItem {
 const navigationItems: NavItem[] = [
 	{
 		key: "github",
-		href: "https://github.com/monkeyWie/typix",
+		href: "https://github.com/zack744/ai-image-studio",
 		icon: Github,
 		external: true,
 	},
 	{
 		key: "docs",
-		href: "https://github.com/monkeyWie/typix#%EF%B8%8F-development-documentation",
+		href: "https://github.com/zack744/ai-image-studio#%EF%B8%8F-development-documentation",
 		icon: ExternalLink,
 		external: true,
 	},
@@ -64,7 +64,7 @@ export function Header() {
 						<img src="logo.png" alt="Logo" className="h-14 w-14" />
 						<div className="flex flex-col">
 							<span className="bg-gradient-to-r from-purple-500 via-blue-500 to-cyan-500 bg-clip-text font-bold text-2xl text-transparent">
-								Typix
+								AI Image Studio
 							</span>
 							<span className="-mt-1 text-muted-foreground text-sm">{t("slogan")}</span>
 						</div>

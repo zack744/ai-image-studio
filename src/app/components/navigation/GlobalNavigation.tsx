@@ -61,9 +61,7 @@ export function GlobalNavigation({ className }: GlobalNavigationProps) {
 			<div className="hidden h-full flex-col items-center pt-2 pb-4 md:flex">
 				{/* App logo/brand */}
 				<a
-					href="https://typix.art/home"
-					// biome-ignore lint/a11y/noBlankTarget: <explanation>
-					target="_blank"
+					href="/"
 					className="mb-2 flex h-14 w-14 items-center justify-center transition-all duration-200 hover:scale-105"
 				>
 					<img src="/logo.png" alt="Logo" className="h-12 w-12" />
@@ -104,7 +102,7 @@ export function GlobalNavigation({ className }: GlobalNavigationProps) {
 						variant="ghost"
 						size="icon"
 						className="h-10 w-10 text-muted-foreground transition-all duration-200 hover:scale-105 hover:bg-accent hover:text-foreground"
-						onClick={() => window.open("https://github.com/monkeyWie/typix", "_blank")}
+						onClick={() => window.open("https://github.com/zack744/ai-image-studio", "_blank")}
 					>
 						<Github className="size-6" />
 					</Button>

@@ -1,6 +1,6 @@
+import ProviderIcon from "@/app/components/icon/ProviderIcon";
 import { Switch } from "@/app/components/ui/switch";
 import { useAiService } from "@/app/hooks/useService";
-import { ModelIcon } from "@lobehub/icons";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ModelListSkeleton } from "./ModelListSkeleton";
@@ -61,7 +61,7 @@ export function ModelList({ providerId }: ModelListProps) {
 					>
 						{/* Left side: Icon and model info */}
 						<div className="flex min-w-0 flex-1 items-center gap-3">
-							<ModelIcon model={model.id} size={32} />
+							<ProviderIcon provider={providerId} size={32} />
 							<div className="min-w-0 flex-1">
 								<div className="truncate font-medium text-sm">{model.name}</div>
 								{i18n.exists(`providers.${providerId}.models.${model.id}.description`) && (

@@ -15,7 +15,7 @@
   },
   "hero": {
     "title": "通过聊天创造精美图像",
-    "subtitle": "基于Nano Banana、Flux Kontext、GPT-4o等模型驱动。只需描述您想要看到的内容，观看Typix如何将您的文字转化为令人惊叹的AI生成图像。",
+    "subtitle": "基于Nano Banana、Flux Kontext、GPT-4o等模型驱动。只需描述您想要看到的内容，观看AI Image Studio如何将您的文字转化为令人惊叹的AI生成图像。",
     "primaryBtn": "开始使用",
     "stats": {
       "images": "创建图像",
@@ -98,10 +98,10 @@
   },
   "preview": {
     "title": "随时随地创作",
-    "subtitle": "在您的所有设备上体验 Typix 强大的AI图像生成功能。"
+    "subtitle": "在您的所有设备上体验 AI Image Studio 强大的AI图像生成功能。"
   },
   "keyFeatures": {
-    "title": "为什么选择 Typix？",
+    "title": "为什么选择 AI Image Studio？",
     "subtitle": "专注隐私保护、性能优化和成本效益"
   },
   "models": {
@@ -145,7 +145,7 @@
   "footer": {
     "subtitle": "AI 图像生成器",
     "description": "使用我们先进的AI图像生成技术，将您的文字转化为惊艳的视觉效果。",
-    "copyright": "© {year} Typix AI. 保留所有权利。",
+    "copyright": "© {year} AI Image Studio. 保留所有权利。",
     "categories": {
       "product": "产品",
       "community": "社区",

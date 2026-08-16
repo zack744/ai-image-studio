@@ -1,2 +1,3 @@
 JWT_SECRET=dev-secret-key-change-in-production
 SUCHUANG_API_KEY=your-suchuang-api-key-here
+WAVESPEED_API_KEY=your_wavespeed_api_key

@@ -206,6 +206,21 @@
 					"description": "速创AI - 高质量AI图像生成，支持多种宽高比。"
 				}
 			}
+		},
+		"wavespeed": {
+			"description": "由WaveSpeed驱动的图像生成服务",
+			"settings": {
+				"apiKey": {
+					"title": "API密钥",
+					"description": "用于身份验证的WaveSpeed API密钥（wavespeed.ai/accesskey 获取）",
+					"placeholder": "输入您的WaveSpeed API密钥"
+				}
+			},
+			"models": {
+				"wavespeed-ai/z-image/turbo": {
+					"description": "Z-Image Turbo - WaveSpeed快速图像生成模型。"
+				}
+			}
 		}
 	}
 }

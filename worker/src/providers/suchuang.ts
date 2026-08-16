@@ -2,8 +2,6 @@ import type { GenerateOptions, ImageProvider } from "./interface";
 
 const SUBMIT_URL = "https://api.wuyinkeji.com/api/async/image_gpt";
 const DETAIL_URL = "https://api.wuyinkeji.com/api/async/detail";
-const DEFAULT_TIMEOUT_SECONDS = 300;
-const POLL_INTERVAL_MS = 2000;
 
 function aspectRatioToSize(aspectRatio?: string): string {
   switch (aspectRatio) {
@@ -70,7 +68,6 @@ export const suchuangProvider: ImageProvider = {
     const body = {
       prompt,
       size,
-      n: options.n || 1,
       ...(options.images?.length ? { urls: options.images } : {}),
     };
 
@@ -81,6 +78,7 @@ export const suchuangProvider: ImageProvider = {
         "Authorization": apiKey,
       },
       body: JSON.stringify(body),
+      signal: AbortSignal.timeout(60_000),
     });
 
     if (!resp.ok) {
@@ -97,6 +95,7 @@ export const suchuangProvider: ImageProvider = {
 
     const resp = await fetch(url, {
       headers: { "Authorization": apiKey },
+      signal: AbortSignal.timeout(30_000),
     });
 
     if (!resp.ok) {

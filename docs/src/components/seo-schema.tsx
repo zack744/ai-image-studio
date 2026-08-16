@@ -7,7 +7,7 @@ export function SEOSchema() {
 	const locale = useLocale();
 
 	const baseUrl = "https://typix.art";
-	const title = "Typix AI";
+	const title = "AI Image Studio";
 	const description = t("description");
 
 	const organizationSchema = {
@@ -17,7 +17,7 @@ export function SEOSchema() {
 		url: baseUrl,
 		logo: `${baseUrl}/logo.png`,
 		description,
-		sameAs: ["https://github.com/typix-ai", "https://twitter.com/TypixAI"],
+		sameAs: ["https://github.com/zack744", "https://twitter.com/AIImageStudio"],
 	};
 
 	const websiteSchema = {

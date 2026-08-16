@@ -30,7 +30,7 @@ generateRoutes.post("/", async (c) => {
   }
 
   const params = (generation.parameters as any) || {};
-  const apiKey = c.env?.SUCHUANG_API_KEY || "";
+  const apiKey = body?.apiKey || c.env?.SUCHUANG_API_KEY || c.env?.WAVESPEED_API_KEY || "";
   if (!apiKey) {
     await db.update(messageGenerations).set({
       status: "failed",
@@ -59,13 +59,14 @@ generateRoutes.post("/", async (c) => {
       images: params.images || [],
       aspectRatio: params.aspectRatio,
       n: params.imageCount || 1,
+      modelId: generation.model,
     }, apiKey);
 
     logger.info("Generation submitted", { generationId, taskId });
 
     await db.update(messageGenerations).set({
       status: "generating",
-      parameters: { ...params, taskId, submittedAt: new Date().toISOString() },
+      parameters: { ...params, apiKey, taskId, submittedAt: new Date().toISOString() },
       updatedAt: new Date().toISOString(),
     }).where(eq(messageGenerations.id, generationId));
 
@@ -121,7 +122,7 @@ generateRoutes.get("/:id", async (c) => {
 
     if (provider && params?.taskId) {
       try {
-        const apiKey = c.env?.SUCHUANG_API_KEY || "";
+        const apiKey = (params as any)?.apiKey || c.env?.SUCHUANG_API_KEY || c.env?.WAVESPEED_API_KEY || "";
         if (!apiKey) {
           await db.update(messageGenerations).set({
             status: "failed",
@@ -182,8 +183,11 @@ generateRoutes.get("/:id", async (c) => {
     resultUrls = fileRecords.filter(Boolean).map((f) => f!.url);
   }
 
+  const params = (generation.parameters as any) || undefined;
+  const safeGen = params ? { ...generation, parameters: { ...params, apiKey: undefined } } : generation;
+
   return c.json({
-    ...generation,
+    ...safeGen,
     resultUrls,
   });
 });

@@ -25,7 +25,7 @@ app.use("*", cors({
       }
     })();
 
-    if (originHost === "typix-frontend.pages.dev" || originHost.endsWith(".typix-frontend.pages.dev")) {
+    if (originHost === "ai-image-studio-frontend.pages.dev" || originHost.endsWith(".ai-image-studio-frontend.pages.dev")) {
       return origin;
     }
 

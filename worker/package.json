@@ -1,5 +1,5 @@
 {
-  "name": "typix-worker",
+  "name": "ai-image-studio-worker",
   "private": true,
   "version": "1.0.0",
   "type": "module",

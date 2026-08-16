@@ -1,4 +1,4 @@
-# ai-image-studio · 速创AI 图像生成
+# AI Image Studio
 
 <p align="center">
   <img alt="React" src="https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
@@ -8,15 +8,15 @@
   <img alt="Apache-2.0" src="https://img.shields.io/badge/License-Apache%202.0-D22128?style=for-the-badge" />
 </p>
 
-一个基于 **速创AI** 国内生图服务的 AI 图像生成工具，日常自用：输入一句话，生成一张图。
+**AI Image Studio** 是一个自托管的 AI 图像生成工具，采用前端 SPA + Cloudflare Workers 后端架构，支持接入速创AI、WaveSpeed 等多服务商生图能力：输入一句话，生成一张图。
 
-基于开源项目二次开发，深度改造了后端 provider 层，接入速创AI 生图能力，并适配 Cloudflare Pages + Workers 自托管部署。
+本项目是上游开源项目 [monkeyWie/typix](https://github.com/monkeyWie/typix) 的 fork/rewrite，深度改造了后端 provider 层，接入速创AI 与 WaveSpeed 生图能力，并适配 Cloudflare Pages + Workers 自托管部署。
 
-**Live**：[typix-frontend.pages.dev/chat](https://typix-frontend.pages.dev/chat)
+**Live**：[ai-image-studio-frontend.pages.dev/chat](https://ai-image-studio-frontend.pages.dev/chat)
 
 ## ✨ 特性
 
-- 🖼️ **AI 生图**：基于速创AI，输入描述即出图，日常自用
+- 🖼️ **AI 生图**：基于速创AI、WaveSpeed，输入描述即出图，日常自用
 - ☁️ **Cloudflare 自托管**：前端 Pages + 后端 Workers（D1 + R2），完全掌控数据
 - 🤖 **可插拔 provider**：后端 provider 接口统一，可继续接入更多生图服务
 - 🔄 **云同步**：登录后多设备同步创作记录
@@ -31,18 +31,19 @@
                                   │ D1 数据库   │ 创作记录 / 用户
                                   │ R2 存储     │ 生成的图片
                                   │ 速创AI      │ 生图推理
+                                  │ WaveSpeed   │ 生图推理
                                   └─────────────┘
 ```
 
 ## 界面预览
 
-**创作对话** — 输入一句描述，按 Enter 即生成图片；支持速创AI 提供商切换与创作历史管理。
+**创作对话** — 输入一句描述，按 Enter 即生成图片；支持速创AI、WaveSpeed 等提供商切换与创作历史管理。
 
 <p align="center">
   <img src="docs/screenshots/chat.png" alt="创作对话" width="760"/>
 </p>
 
-**AI 提供商设置** — 可插拔的 provider 配置页，管理速创AI 等服务接入。
+**AI 提供商设置** — 可插拔的 provider 配置页，管理速创AI、WaveSpeed 等服务接入。
 
 <p align="center">
   <img src="docs/screenshots/provider.png" alt="AI提供商设置" width="760"/>
@@ -50,8 +51,8 @@
 
 ## 二次开发说明
 
-- **接入速创AI provider**：后端新增 `suchuang` provider，实现统一生图接口（见 `worker/src/providers/suchuang.ts`）
-- **前端适配**：新增速创AI 提供商配置（`src/app/ai/provider/index.ts`）
+- **接入 provider**：后端新增 `suchuang` 等 provider，实现统一生图接口（见 `worker/src/providers/`）
+- **前端适配**：新增 provider 配置（`src/app/ai/provider/index.ts`）
 - **部署改造**：后端重构为 Cloudflare Workers（`worker/`），支持 D1 + R2 + Pages 全栈部署
 - **快捷部署脚本**：`pnpm deploy:worker` / `pnpm deploy:frontend`
 
@@ -66,28 +67,38 @@
 
 ```bash
 # 1. 克隆并安装
+git clone https://github.com/zack744/ai-image-studio.git
+cd ai-image-studio
 pnpm install
 
 # 2. 登录 Wrangler
 npx wrangler login
 
 # 3. 创建 D1 数据库和 R2 存储桶
-npx wrangler d1 create typix-db
-npx wrangler r2 bucket create typix-images
+# 资源名称已在 worker/wrangler.toml 中配置（D1 的 database_name、R2 的 bucket_name）
 
 # 4. 将 D1 database_id 填入 worker/wrangler.toml（顶层和 [env.production] 两处）
 
-# 5. 设置密钥
+# 5. 设置后端密钥（JWT 必填；provider API key 可选，见下）
 npx wrangler secret put JWT_SECRET --config worker/wrangler.toml --env production
-npx wrangler secret put SUCHUANG_API_KEY --config worker/wrangler.toml --env production
+# npx wrangler secret put SUCHUANG_API_KEY --config worker/wrangler.toml --env production
+# npx wrangler secret put WAVESPEED_API_KEY --config worker/wrangler.toml --env production
 
 # 6. 数据库迁移
 pnpm db:migrate
 
-# 7. 部署后端 + 前端
+# 7. 部署后端
 pnpm deploy:worker
+
+# 8. 配置前端生产环境变量并部署
+cp .env.production.example .env.production   # 将 VITE_WORKER_URL 改成你的 Worker 地址
 pnpm deploy:frontend
 ```
+
+### 接入生图服务（API Key 两种方式）
+
+- **服务端密钥（可选）**：通过 `wrangler secret put` 设置 `SUCHUANG_API_KEY` / `WAVESPEED_API_KEY`，前端无需配置即生效。
+- **前端设置页（推荐，不入代码）**：登录后在「设置 → AI 提供商」中开启对应提供商并填写 API Key，密钥保存在浏览器本地，随生成请求透传给后端，不会硬编码进仓库。
 
 ## 开发
 

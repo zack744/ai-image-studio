@@ -1,14 +1,11 @@
-import { ModelIcon as LobeModelIcon, ProviderIcon as LobeProviderIcon } from "@lobehub/icons";
-import type { ProviderIconProps as LobeProviderIconProps } from "@lobehub/icons/es/features/ProviderIcon";
+type ProviderIconProps = {
+	provider?: string;
+	type?: "mono" | "avatar" | "color" | "text" | "combined";
+	size?: number;
+	className?: string;
+	model?: string;
+};
 
-export default function ProviderIcon(props: LobeProviderIconProps) {
-	if (props.provider?.toLocaleLowerCase() === "suchuang") {
-		return <img src="/logo.png" alt="速创AI" className={props.className} />;
-	}
-
-	if (props.provider?.toLocaleLowerCase() === "flux") {
-		return <LobeModelIcon model={props.provider} {...props} />;
-	}
-
-	return <LobeProviderIcon {...props} />;
+export default function ProviderIcon({ provider, size = 16, className }: ProviderIconProps) {
+	return <img src="/logo.png" alt={provider || "AI"} width={size} height={size} className={className} />;
 }

@@ -5,4 +5,5 @@ interface Env {
   R2_PUBLIC_URL?: string;
   ENVIRONMENT?: string;
   SUCHUANG_API_KEY?: string;
+  WAVESPEED_API_KEY?: string;
 }

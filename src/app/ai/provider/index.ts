@@ -3,6 +3,8 @@ import type { AiProvider } from "../types/provider";
 
 export const SUCHUANG_PROVIDER_ID = "suchuang";
 export const SUCHUANG_MODEL_ID = "suchuang-ai";
+export const WAVESPEED_PROVIDER_ID = "wavespeed";
+export const WAVESPEED_MODEL_ID = "wavespeed-ai/z-image/turbo";
 
 export const AI_PROVIDERS: AiProvider[] = [
 	{
@@ -20,8 +22,28 @@ export const AI_PROVIDERS: AiProvider[] = [
 				supportedAspectRatios: ["1:1", "16:9", "9:16", "4:3", "3:4"],
 			},
 		],
-		settings: [],
-		parseSettings: <T,>() => ({}) as T,
+		settings: [{ key: "apiKey", type: "password", required: false }],
+		parseSettings: <T>() => ({}) as T,
+		generate: async (_request) => {
+			throw new Error("Direct generation is not supported. Use the Worker API instead.");
+		},
+	},
+	{
+		id: WAVESPEED_PROVIDER_ID,
+		name: "WaveSpeed",
+		enabledByDefault: false,
+		supportCors: true,
+		models: [
+			{
+				id: WAVESPEED_MODEL_ID,
+				name: "Z-Image Turbo",
+				ability: "t2i",
+				enabledByDefault: true,
+				supportedAspectRatios: ["1:1", "16:9", "9:16", "4:3", "3:4"],
+			},
+		],
+		settings: [{ key: "apiKey", type: "password", required: false }],
+		parseSettings: <T>() => ({}) as T,
 		generate: async (_request) => {
 			throw new Error("Direct generation is not supported. Use the Worker API instead.");
 		},

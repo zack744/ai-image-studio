@@ -41,7 +41,7 @@ function getSecret(c: Context<AppEnv>): Uint8Array {
     throw new Error("JWT_SECRET is required in production");
   }
 
-  const resolvedSecret = secret || "typix-dev-secret-change-in-production";
+  const resolvedSecret = secret || "ai-image-studio-dev-secret-change-in-production";
   return new TextEncoder().encode(resolvedSecret);
 }
 

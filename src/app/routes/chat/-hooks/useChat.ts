@@ -1,6 +1,6 @@
 import { useAuth } from "@/app/hooks/useAuth";
 import { useAiService } from "@/app/hooks/useService";
-import { useChatService } from "@/app/hooks/useService";
+import { getProviderApiKey, useChatService } from "@/app/hooks/useService";
 import type { AspectRatio } from "@/app/ai/types/api";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -318,7 +318,10 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 							assistantMessage.generation.status = "generating";
 
 							// Fire and forget - don't await, let it run in background
-							generateTrigger({ generationId: assistantMessage.generation.id }).catch((error) => {
+							generateTrigger({
+								generationId: assistantMessage.generation.id,
+								apiKey: getProviderApiKey(provider),
+							}).catch((error) => {
 								console.error("Error triggering image generation:", error);
 							});
 						}
@@ -471,7 +474,10 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 
 					if (shouldTriggerGeneration) {
 						// Fire and forget - don't await, let it run in background
-						generateTrigger({ generationId: assistantMessage!.generation!.id }).catch((error) => {
+						generateTrigger({
+							generationId: assistantMessage!.generation!.id,
+							apiKey: getProviderApiKey(assistantMessage!.generation!.provider || provider),
+						}).catch((error) => {
 							console.error("Error triggering image generation:", error);
 						});
 					}
@@ -605,10 +611,16 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 
 				// Trigger image generation in browser (not blocked by server timeout)
 				if (result?.generationId) {
+					// Resolve provider from the regenerated message or the chat
+					const targetMessage = currentChat?.messages?.find((msg: any) => msg.id === messageId);
+					const generationProvider = targetMessage?.generation?.provider || currentChat?.provider;
+
 					// Fire and forget - don't await, let it run in background
-					generateTrigger({ generationId: result.generationId }).catch((error) => {
-						console.error("Error triggering image generation:", error);
-					});
+					generateTrigger({ generationId: result.generationId, apiKey: getProviderApiKey(generationProvider) }).catch(
+						(error) => {
+							console.error("Error triggering image generation:", error);
+						},
+					);
 				}
 
 				// The polling mechanism in ChatMessageItem will handle updating the UI
@@ -639,7 +651,7 @@ export const useChat = (initialChatId?: string, selectedProvider?: string, selec
 				setIsGenerating(false);
 			}
 		},
-		[regenerateTrigger, generateTrigger, currentChatId, currentChatMutate],
+		[regenerateTrigger, generateTrigger, currentChatId, currentChatMutate, currentChat],
 	);
 
 	// Transform user data to match the expected format

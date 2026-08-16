@@ -3,6 +3,7 @@ export interface GenerateOptions {
   images?: string[];
   n?: number;
   aspectRatio?: string;
+  modelId?: string;
 }
 
 export interface GenerateResult {

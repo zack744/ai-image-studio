@@ -46,7 +46,7 @@ export function Footer() {
 							</div>
 							<div className="flex flex-col">
 								<span className="bg-gradient-to-r from-purple-400 via-blue-400 to-cyan-400 bg-clip-text font-bold text-2xl text-transparent">
-									Typix
+									AI Image Studio
 								</span>
 								<span className="font-medium text-muted-foreground text-xs uppercase tracking-wider">
 									{nav("slogan")}
@@ -56,7 +56,7 @@ export function Footer() {
 						<p className="mb-8 text-muted-foreground leading-relaxed">{t("description")}</p>
 						<div className="flex space-x-4">
 							{[
-								{ icon: Github, href: "https://github.com/typix-ai/typix", color: "hover:text-gray-400" },
+								{ icon: Github, href: "https://github.com/zack744/ai-image-studio", color: "hover:text-gray-400" },
 								{ icon: Twitter, href: "https://x.com/JayPlayDota", color: "hover:text-blue-400" },
 								{ icon: MessageCircle, href: "#", color: "hover:text-purple-400" },
 							].map((social, index) => (
