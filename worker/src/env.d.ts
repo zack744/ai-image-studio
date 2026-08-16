@@ -4,6 +4,5 @@ interface Env {
   JWT_SECRET: string;
   R2_PUBLIC_URL?: string;
   ENVIRONMENT?: string;
-  SUCHUANG_API_KEY?: string;
-  WAVESPEED_API_KEY?: string;
+  INVITE_CODE?: string;
 }

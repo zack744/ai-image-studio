@@ -30,14 +30,14 @@ generateRoutes.post("/", async (c) => {
   }
 
   const params = (generation.parameters as any) || {};
-  const apiKey = body?.apiKey || c.env?.SUCHUANG_API_KEY || c.env?.WAVESPEED_API_KEY || "";
+  const apiKey = body?.apiKey;
   if (!apiKey) {
     await db.update(messageGenerations).set({
       status: "failed",
       errorReason: "CONFIG_ERROR",
       updatedAt: new Date().toISOString(),
     }).where(eq(messageGenerations.id, generationId));
-    return c.json({ error: "Provider API key is not configured" }, 500);
+    return c.json({ error: "Provider API key is required. Configure it in Settings → AI Providers first." }, 400);
   }
 
   const provider = getProvider(generation.provider);
@@ -122,7 +122,7 @@ generateRoutes.get("/:id", async (c) => {
 
     if (provider && params?.taskId) {
       try {
-        const apiKey = (params as any)?.apiKey || c.env?.SUCHUANG_API_KEY || c.env?.WAVESPEED_API_KEY || "";
+        const apiKey = (params as any)?.apiKey;
         if (!apiKey) {
           await db.update(messageGenerations).set({
             status: "failed",

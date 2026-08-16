@@ -5,7 +5,7 @@ import { Label } from "@/app/components/ui/label";
 import { Separator } from "@/app/components/ui/separator";
 import { useAuth } from "@/app/hooks/useAuth";
 import { useUIStore } from "@/app/stores";
-import { AlertCircle, Eye, EyeOff, Lock, Mail, User } from "lucide-react";
+import { AlertCircle, Eye, EyeOff, KeyRound, Lock, Mail, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -16,23 +16,24 @@ export function LoginModal() {
   const { isLogin, user, register, login } = useAuth();
   const { t } = useTranslation();
 
-  const [modalState, setModalState] = useState<AuthModalState>("login");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
+	const [modalState, setModalState] = useState<AuthModalState>("login");
+	const [showPassword, setShowPassword] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
+	const [error, setError] = useState<string | null>(null);
+	const [formData, setFormData] = useState({
+		name: "",
+		email: "",
+		password: "",
+		inviteCode: "",
+	});
 
-  const resetAllState = () => {
-    setFormData({ name: "", email: "", password: "" });
-    setShowPassword(false);
-    setModalState("login");
-    setError(null);
-    setIsLoading(false);
-  };
+	const resetAllState = () => {
+		setFormData({ name: "", email: "", password: "", inviteCode: "" });
+		setShowPassword(false);
+		setModalState("login");
+		setError(null);
+		setIsLoading(false);
+	};
 
   const getModalContent = () => {
     switch (modalState) {
@@ -59,39 +60,41 @@ export function LoginModal() {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const toggleMode = () => {
-    setModalState(modalState === "login" ? "register" : "login");
-    setFormData({ name: "", email: "", password: "" });
-    setShowPassword(false);
-    setError(null);
-  };
+	const toggleMode = () => {
+		setModalState(modalState === "login" ? "register" : "login");
+		setFormData({ name: "", email: "", password: "", inviteCode: "" });
+		setShowPassword(false);
+		setError(null);
+	};
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+	const handleSubmit = async (e: React.FormEvent) => {
+		e.preventDefault();
+		setIsLoading(true);
+		setError(null);
 
-    try {
-      if (modalState === "login") {
-        await login(formData.email, formData.password);
-      } else {
-        await register(formData.email, formData.password, formData.name);
-      }
-    } catch (err: any) {
-      const message = err?.message || "";
-      if (message.includes("Invalid email or password")) {
-        setError(t("auth.invalidEmailOrPassword"));
-      } else if (message.includes("already registered")) {
-        setError(t("auth.userAlreadyExists"));
-      } else if (message.includes("password")) {
-        setError(t("auth.passwordTooShort"));
-      } else {
-        setError(message || t("auth.networkError"));
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+		try {
+			if (modalState === "login") {
+				await login(formData.email, formData.password);
+			} else {
+				await register(formData.email, formData.password, formData.name, formData.inviteCode || undefined);
+			}
+		} catch (err: any) {
+			const message = err?.message || "";
+			if (message.includes("Invalid email or password")) {
+				setError(t("auth.invalidEmailOrPassword"));
+			} else if (message.includes("already registered")) {
+				setError(t("auth.userAlreadyExists"));
+			} else if (message.includes("Invalid invite code")) {
+				setError(t("auth.invalidInviteCode"));
+			} else if (message.includes("password")) {
+				setError(t("auth.passwordTooShort"));
+			} else {
+				setError(message || t("auth.networkError"));
+			}
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
   const handleClose = () => {
     closeLoginModal();
@@ -117,23 +120,41 @@ export function LoginModal() {
 
         <div className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-4">
-            {modalState === "register" && (
-              <div className="space-y-2">
-                <Label htmlFor="name">{t("auth.username")}</Label>
-                <div className="relative">
-                  <User className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="name"
-                    type="text"
-                    placeholder={t("auth.enterUsername")}
-                    value={formData.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
-                    className="pl-10"
-                    required
-                  />
-                </div>
-              </div>
-            )}
+			{modalState === "register" && (
+				<div className="space-y-2">
+					<Label htmlFor="name">{t("auth.username")}</Label>
+					<div className="relative">
+						<User className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
+						<Input
+							id="name"
+							type="text"
+							placeholder={t("auth.enterUsername")}
+							value={formData.name}
+							onChange={(e) => handleInputChange("name", e.target.value)}
+							className="pl-10"
+							required
+						/>
+					</div>
+				</div>
+			)}
+
+			{modalState === "register" && (
+				<div className="space-y-2">
+					<Label htmlFor="inviteCode">{t("auth.inviteCode")}</Label>
+					<div className="relative">
+						<KeyRound className="-translate-y-1/2 absolute top-1/2 left-3 h-4 w-4 text-muted-foreground" />
+						<Input
+							id="inviteCode"
+							type="text"
+							placeholder={t("auth.enterInviteCode")}
+							value={formData.inviteCode}
+							onChange={(e) => handleInputChange("inviteCode", e.target.value)}
+							className="pl-10"
+							required
+						/>
+					</div>
+				</div>
+			)}
 
             <div className="space-y-2">
               <Label htmlFor="email">{t("auth.email")}</Label>

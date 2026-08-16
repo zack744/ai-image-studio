@@ -63,7 +63,8 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 	}
 
 	if (!resp.ok) {
-		throw new ApiError(data?.error || "request_error", data?.message || `Request failed with status ${resp.status}`);
+		const message = data?.message || data?.error || `Request failed with status ${resp.status}`;
+		throw new ApiError(data?.error || "request_error", message);
 	}
 
 	return data as T;
@@ -78,10 +79,10 @@ export class ApiError extends Error {
 }
 
 // Auth API
-async function register(email: string, password: string, name: string) {
+async function register(email: string, password: string, name: string, inviteCode?: string) {
 	const data = await request<{ token: string; user: any }>("/api/auth/register", {
 		method: "POST",
-		body: { email, password, name } as any,
+		body: { email, password, name, ...(inviteCode ? { inviteCode } : {}) } as any,
 	});
 	setToken(data.token);
 	return data;

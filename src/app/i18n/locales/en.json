@@ -1,226 +1,229 @@
 {
-	"common": {
-		"save": "Save",
-		"cancel": "Cancel",
-		"delete": "Delete",
-		"edit": "Edit",
-		"create": "Create",
-		"loading": "Loading...",
-		"error": "Error",
-		"success": "Success",
-		"unknown": "Unknown",
-		"yesterday": "Yesterday",
-		"daysAgo": "days ago"
-	},
-	"app": {
-		"initializing": "Initializing",
-		"initializationFailed": "Initialization Failed",
-		"retry": "Retry"
-	},
-	"chat": {
-		"newChat": "New Creation",
-		"newChatTitle": "New Creation",
-		"typeMessage": "Type to generate, press Enter to send • Shift+Enter for new line",
-		"sendMessage": "Send message",
-		"uploadForImageToImage": "Upload image for image-to-image generation",
-		"textToImageModelNoUpload": "Current model only supports text-to-image generation",
-		"maxImagesReached": "Maximum images reached",
-		"imageCount": "Number of images to generate",
-		"aspectRatio": "Aspect Ratio",
-		"auto": "Auto",
-		"autoAspectRatio": "Let the model decide the image dimensions",
-		"tooManyImagesSelected": "Too many images selected",
-		"onlyAddedImages": "Only added {{added}} of {{selected}} selected images due to limit",
-		"modelChanged": "Model Changed",
-		"textToImageOnlyModel": "Current model only supports text-to-image generation, uploaded images have been cleared",
-		"generateImage": "Generate image",
-		"chatHistory": "Creation History",
-		"noChats": "No creation sessions yet",
-		"chatWith": "Start creating",
-		"imageGenerated": "Image generated successfully",
-		"thinking": "AI is thinking...",
-		"generating": "Generating image...",
-		"selectModel": "Select AI Model",
-		"welcomeMessage": "Describe the image you'd like me to create! Let your imagination run wild.",
-		"generatedImage": "Generated image",
-		"userImage": "Uploaded image",
-		"generatedOrUploaded": "Generated or uploaded",
-		"ai": "AI",
-		"clickToEnlarge": "Click to enlarge image",
-		"actions": {
-			"copy": "Copy",
-			"download": "Download",
-			"delete": "Delete"
-		},
-		"error": {
-			"title": "Error",
-			"default": "An error occurred while sending the message",
-			"createChat": "Failed to create chat - no available AI models",
-			"noModel": "No available AI models - please configure providers first",
-			"createNewChat": "Failed to create new chat - please select a provider and model"
-		},
-		"generation": {
-			"failed": "Generation failed",
-			"configError": "Provider configuration error",
-			"configErrorDesc": "Please check your provider settings and try again",
-			"apiError": "API request failed",
-			"apiErrorDesc": "The service is temporarily unavailable, please try again later",
-			"timeoutError": "Request timeout",
-			"timeoutErrorDesc": "The request took too long, please try again",
-			"tooManyRequests": "Too many requests",
-			"tooManyRequestsDesc": "You have made too many requests, please try again later",
-			"promptFlagged": "Prompt flagged",
-			"promptFlaggedDesc": "Your prompt violates content policy, please modify and try again",
-			"inputImageFlagged": "Image flagged",
-			"inputImageFlaggedDesc": "Your image violates content policy, please change and try again",
-			"unknownError": "Unknown error",
-			"unknownErrorDesc": "An unexpected error occurred, please try again",
-			"goToSettings": "Go to Settings",
-			"retry": "Retry"
-		}
-	},
-	"navigation": {
-		"chat": "Chat",
-		"settings": "Settings"
-	},
-	"settings": {
-		"title": "Settings",
-		"description": "Manage your application preferences",
-		"language": "Language",
-		"theme": "Theme",
-		"themeColor": "Theme Color",
-		"themeColorDescription": "Customize the application's primary color",
-		"model": "AI Model",
-		"general": "General",
-		"appearance": "Appearance",
-		"advanced": "Advanced",
-		"selectLanguage": "Select Language",
-		"sections": {
-			"common": "General Settings",
-			"provider": "AI Providers"
-		},
-		"provider": {
-			"title": "AI Providers",
-			"description": "Manage your AI service configurations",
-			"selectOption": "Please select an option",
-			"selectPlaceholder": "Please select...",
-			"settingsSaved": "Settings saved",
-			"saveFailed": "Save failed",
-			"saveError": "An error occurred while saving settings",
-			"enabled": "Enabled",
-			"disabled": "Disabled",
-			"selectProvider": "Select Provider",
-			"selectProviderDescription": "Please select an AI provider from the left list to configure its settings",
-			"configureToStart": "Configure AI providers to start using services"
-		},
-		"validation": {
-			"required": "This field is required",
-			"selectOption": "Please select an option",
-			"validUrl": "Please enter a valid URL",
-			"validNumber": "Please enter a valid number",
-			"minValue": "Minimum value is {{min}}",
-			"maxValue": "Maximum value is {{max}}"
-		}
-	},
-	"auth": {
-		"welcomeBack": "Welcome Back",
-		"createAccount": "Create Account",
-		"loginDescription": "Login to your account to continue",
-		"registerDescription": "Register a new account to start your creative journey",
-		"username": "Username",
-		"email": "Email",
-		"password": "Password",
-		"enterUsername": "Please enter username",
-		"enterEmail": "Please enter email address",
-		"enterPassword": "Please enter password",
-		"login": "Login",
-		"register": "Register",
-		"processing": "Processing...",
-		"loginFailed": "Login failed",
-		"registerFailed": "Registration failed",
-		"networkError": "Network error, please try again later",
-		"or": "or",
-		"noAccount": "Don't have an account?",
-		"hasAccount": "Already have an account?",
-		"signUpNow": "Sign up now",
-		"goToLogin": "Go to login",
-		"welcomeMessage": "Welcome",
-		"loginToSave": "Login to save your creations",
-		"continueWithGoogle": "Continue with Google",
-		"continueWithGithub": "Continue with GitHub",
-		"tryGoogleOneTap": "Try Google One Tap",
-		"socialLoginFailed": "Social login failed",
-		"googleOneTapFailed": "Google One Tap failed",
-		"verifyEmail": "Verify Your Email",
-		"otpDescription": "We've sent a verification code to {{email}}. Please enter the code below.",
-		"otpInstructions": "Please enter the verification code sent to your email",
-		"verificationCode": "Verification Code",
-		"enterVerificationCode": "Enter 6-digit code",
-		"verifyCode": "Verify Code",
-		"didntReceiveCode": "Didn't receive the code?",
-		"resendCode": "Resend Code",
-		"otpVerificationFailed": "OTP verification failed",
-		"otpVerificationError": "OTP verification error",
-		"otpResendFailed": "Failed to resend OTP",
-		"otpResendError": "Error resending OTP",
-		"invalidVerificationCode": "Invalid verification code",
-		"verificationCodeExpired": "Verification code has expired",
-		"tooManyAttempts": "Too many failed attempts, please try again later",
-		"invalidEmail": "Invalid email address",
-		"userNotFound": "User not found",
-		"invalidEmailOrPassword": "Invalid email or password",
-		"passwordTooShort": "Password too short",
-		"passwordTooLong": "Password too long",
-		"userAlreadyExists": "User already exists with this email address"
-	},
-	"user": {
-		"avatar": "User avatar",
-		"nickname": "Nickname",
-		"signOut": "Sign out",
-		"online": "Online",
-		"defaultName": "User"
-	},
-	"theme": {
-		"auto": "Auto",
-		"light": "Light",
-		"dark": "Dark",
-		"selectTheme": "Select Theme",
-		"selectThemeColor": "Select Theme Color"
-	},
-	"language": {
-		"label": "English",
-		"followSystem": "Follow System"
-	},
-	"providers": {
-		"suchuang": {
-			"description": "AI image generation powered by Suchuang",
-			"settings": {
-				"apiKey": {
-					"title": "API Key",
-					"description": "Your Suchuang API key for authentication",
-					"placeholder": "Enter your Suchuang API key"
-				}
-			},
-			"models": {
-				"suchuang-ai": {
-					"description": "Suchuang AI - High-quality AI image generation with multiple aspect ratio support."
-				}
-			}
-		},
-		"wavespeed": {
-			"description": "AI image generation powered by WaveSpeed",
-			"settings": {
-				"apiKey": {
-					"title": "API Key",
-					"description": "Your WaveSpeed API key for authentication (get it at wavespeed.ai/accesskey)",
-					"placeholder": "Enter your WaveSpeed API key"
-				}
-			},
-			"models": {
-				"wavespeed-ai/z-image/turbo": {
-					"description": "Z-Image Turbo - WaveSpeed's fast image generation model."
-				}
-			}
-		}
-	}
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "unknown": "Unknown",
+    "yesterday": "Yesterday",
+    "daysAgo": "days ago"
+  },
+  "app": {
+    "initializing": "Initializing",
+    "initializationFailed": "Initialization Failed",
+    "retry": "Retry"
+  },
+  "chat": {
+    "newChat": "New Creation",
+    "newChatTitle": "New Creation",
+    "typeMessage": "Type to generate, press Enter to send • Shift+Enter for new line",
+    "sendMessage": "Send message",
+    "uploadForImageToImage": "Upload image for image-to-image generation",
+    "textToImageModelNoUpload": "Current model only supports text-to-image generation",
+    "maxImagesReached": "Maximum images reached",
+    "imageCount": "Number of images to generate",
+    "aspectRatio": "Aspect Ratio",
+    "auto": "Auto",
+    "autoAspectRatio": "Let the model decide the image dimensions",
+    "tooManyImagesSelected": "Too many images selected",
+    "onlyAddedImages": "Only added {{added}} of {{selected}} selected images due to limit",
+    "modelChanged": "Model Changed",
+    "textToImageOnlyModel": "Current model only supports text-to-image generation, uploaded images have been cleared",
+    "generateImage": "Generate image",
+    "chatHistory": "Creation History",
+    "noChats": "No creation sessions yet",
+    "chatWith": "Start creating",
+    "imageGenerated": "Image generated successfully",
+    "thinking": "AI is thinking...",
+    "generating": "Generating image...",
+    "selectModel": "Select AI Model",
+    "welcomeMessage": "Describe the image you'd like me to create! Let your imagination run wild.",
+    "generatedImage": "Generated image",
+    "userImage": "Uploaded image",
+    "generatedOrUploaded": "Generated or uploaded",
+    "ai": "AI",
+    "clickToEnlarge": "Click to enlarge image",
+    "actions": {
+      "copy": "Copy",
+      "download": "Download",
+      "delete": "Delete"
+    },
+    "error": {
+      "title": "Error",
+      "default": "An error occurred while sending the message",
+      "createChat": "Failed to create chat - no available AI models",
+      "noModel": "No available AI models - please configure providers first",
+      "createNewChat": "Failed to create new chat - please select a provider and model"
+    },
+    "generation": {
+      "failed": "Generation failed",
+      "configError": "Provider configuration error",
+      "configErrorDesc": "Please check your provider settings and try again",
+      "apiError": "API request failed",
+      "apiErrorDesc": "The service is temporarily unavailable, please try again later",
+      "timeoutError": "Request timeout",
+      "timeoutErrorDesc": "The request took too long, please try again",
+      "tooManyRequests": "Too many requests",
+      "tooManyRequestsDesc": "You have made too many requests, please try again later",
+      "promptFlagged": "Prompt flagged",
+      "promptFlaggedDesc": "Your prompt violates content policy, please modify and try again",
+      "inputImageFlagged": "Image flagged",
+      "inputImageFlaggedDesc": "Your image violates content policy, please change and try again",
+      "unknownError": "Unknown error",
+      "unknownErrorDesc": "An unexpected error occurred, please try again",
+      "goToSettings": "Go to Settings",
+      "retry": "Retry"
+    }
+  },
+  "navigation": {
+    "chat": "Chat",
+    "settings": "Settings"
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your application preferences",
+    "language": "Language",
+    "theme": "Theme",
+    "themeColor": "Theme Color",
+    "themeColorDescription": "Customize the application's primary color",
+    "model": "AI Model",
+    "general": "General",
+    "appearance": "Appearance",
+    "advanced": "Advanced",
+    "selectLanguage": "Select Language",
+    "sections": {
+      "common": "General Settings",
+      "provider": "AI Providers"
+    },
+    "provider": {
+      "title": "AI Providers",
+      "description": "Manage your AI service configurations",
+      "selectOption": "Please select an option",
+      "selectPlaceholder": "Please select...",
+      "settingsSaved": "Settings saved",
+      "saveFailed": "Save failed",
+      "saveError": "An error occurred while saving settings",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "selectProvider": "Select Provider",
+      "selectProviderDescription": "Please select an AI provider from the left list to configure its settings",
+      "configureToStart": "Configure AI providers to start using services"
+    },
+    "validation": {
+      "required": "This field is required",
+      "selectOption": "Please select an option",
+      "validUrl": "Please enter a valid URL",
+      "validNumber": "Please enter a valid number",
+      "minValue": "Minimum value is {{min}}",
+      "maxValue": "Maximum value is {{max}}"
+    }
+  },
+  "auth": {
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Create Account",
+    "loginDescription": "Login to your account to continue",
+    "registerDescription": "Register a new account to start your creative journey",
+    "username": "Username",
+    "email": "Email",
+    "password": "Password",
+    "enterUsername": "Please enter username",
+    "enterEmail": "Please enter email address",
+    "enterPassword": "Please enter password",
+    "login": "Login",
+    "register": "Register",
+    "processing": "Processing...",
+    "loginFailed": "Login failed",
+    "registerFailed": "Registration failed",
+    "networkError": "Network error, please try again later",
+    "or": "or",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "signUpNow": "Sign up now",
+    "goToLogin": "Go to login",
+    "welcomeMessage": "Welcome",
+    "loginToSave": "Login to save your creations",
+    "continueWithGoogle": "Continue with Google",
+    "continueWithGithub": "Continue with GitHub",
+    "tryGoogleOneTap": "Try Google One Tap",
+    "socialLoginFailed": "Social login failed",
+    "googleOneTapFailed": "Google One Tap failed",
+    "verifyEmail": "Verify Your Email",
+    "otpDescription": "We've sent a verification code to {{email}}. Please enter the code below.",
+    "otpInstructions": "Please enter the verification code sent to your email",
+    "verificationCode": "Verification Code",
+    "enterVerificationCode": "Enter 6-digit code",
+    "verifyCode": "Verify Code",
+    "didntReceiveCode": "Didn't receive the code?",
+    "resendCode": "Resend Code",
+    "otpVerificationFailed": "OTP verification failed",
+    "otpVerificationError": "OTP verification error",
+    "otpResendFailed": "Failed to resend OTP",
+    "otpResendError": "Error resending OTP",
+    "invalidVerificationCode": "Invalid verification code",
+    "verificationCodeExpired": "Verification code has expired",
+    "tooManyAttempts": "Too many failed attempts, please try again later",
+    "invalidEmail": "Invalid email address",
+    "userNotFound": "User not found",
+    "invalidEmailOrPassword": "Invalid email or password",
+    "passwordTooShort": "Password too short",
+    "passwordTooLong": "Password too long",
+    "userAlreadyExists": "User already exists with this email address",
+    "inviteCode": "Invite Code",
+    "enterInviteCode": "Enter your invite code",
+    "invalidInviteCode": "Invalid invite code"
+  },
+  "user": {
+    "avatar": "User avatar",
+    "nickname": "Nickname",
+    "signOut": "Sign out",
+    "online": "Online",
+    "defaultName": "User"
+  },
+  "theme": {
+    "auto": "Auto",
+    "light": "Light",
+    "dark": "Dark",
+    "selectTheme": "Select Theme",
+    "selectThemeColor": "Select Theme Color"
+  },
+  "language": {
+    "label": "English",
+    "followSystem": "Follow System"
+  },
+  "providers": {
+    "suchuang": {
+      "description": "AI image generation powered by Suchuang",
+      "settings": {
+        "apiKey": {
+          "title": "API Key",
+          "description": "Your Suchuang API key for authentication",
+          "placeholder": "Enter your Suchuang API key"
+        }
+      },
+      "models": {
+        "suchuang-ai": {
+          "description": "Suchuang AI - High-quality AI image generation with multiple aspect ratio support."
+        }
+      }
+    },
+    "wavespeed": {
+      "description": "AI image generation powered by WaveSpeed",
+      "settings": {
+        "apiKey": {
+          "title": "API Key",
+          "description": "Your WaveSpeed API key for authentication (get it at wavespeed.ai/accesskey)",
+          "placeholder": "Enter your WaveSpeed API key"
+        }
+      },
+      "models": {
+        "wavespeed-ai/z-image/turbo": {
+          "description": "Z-Image Turbo - WaveSpeed's fast image generation model."
+        }
+      }
+    }
+  }
 }

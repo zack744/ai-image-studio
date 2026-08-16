@@ -9,6 +9,7 @@ const registerSchema = z.object({
   email: z.string().email().max(255),
   password: z.string().min(6).max(128),
   name: z.string().min(1).max(100),
+  inviteCode: z.string().max(100).optional(),
 });
 
 const loginSchema = z.object({
@@ -27,7 +28,15 @@ authRoutes.post("/register", async (c) => {
     return c.json({ error: "Invalid input", details: parsed.error.flatten() }, 400);
   }
 
-  const { email, password, name } = parsed.data;
+  const { email, password, name, inviteCode } = parsed.data;
+
+  // Registration gate: if INVITE_CODE is configured, a matching invite code is required.
+  const expectedInviteCode = c.env?.INVITE_CODE;
+  if (expectedInviteCode) {
+    if (!inviteCode || inviteCode.trim() !== expectedInviteCode) {
+      return c.json({ error: "Invalid invite code" }, 403);
+    }
+  }
 
   const existing = await db.query.users.findFirst({
     where: eq(users.email, email.toLowerCase().trim()),

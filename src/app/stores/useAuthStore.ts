@@ -14,7 +14,7 @@ type AuthState = {
 	error: Error | null;
 	loaded: boolean;
 	loadUser: () => Promise<void>;
-	register: (email: string, password: string, name: string) => Promise<{ user: User }>;
+	register: (email: string, password: string, name: string, inviteCode?: string) => Promise<{ user: User }>;
 	login: (email: string, password: string) => Promise<{ user: User }>;
 	logout: () => void;
 };
@@ -56,9 +56,9 @@ export const useAuthStore = create<AuthState>((set, get) => ({
 		return inflight;
 	},
 
-	register: async (email, password, name) => {
+	register: async (email, password, name, inviteCode) => {
 		try {
-			const data = await apiClient.auth.register(email, password, name);
+			const data = await apiClient.auth.register(email, password, name, inviteCode);
 			set({ user: data.user, loaded: true, error: null, isLoading: false });
 			return data;
 		} catch (e) {

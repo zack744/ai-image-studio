@@ -1,226 +1,229 @@
 {
-	"common": {
-		"save": "保存",
-		"cancel": "取消",
-		"delete": "删除",
-		"edit": "编辑",
-		"create": "创建",
-		"loading": "加载中...",
-		"error": "错误",
-		"success": "成功",
-		"unknown": "未知",
-		"yesterday": "昨天",
-		"daysAgo": "天前"
-	},
-	"app": {
-		"initializing": "初始化中",
-		"initializationFailed": "初始化失败",
-		"retry": "重试"
-	},
-	"chat": {
-		"newChat": "新建创作",
-		"newChatTitle": "新创作",
-		"typeMessage": "输入生成图片，按 Enter 发送 • Shift+Enter 换行",
-		"sendMessage": "发送消息",
-		"uploadForImageToImage": "上传图片进行图生图",
-		"textToImageModelNoUpload": "当前模型仅支持文生图",
-		"maxImagesReached": "已达到最大图片数量",
-		"imageCount": "生成图片数量",
-		"aspectRatio": "图片尺寸",
-		"auto": "自动",
-		"autoAspectRatio": "由模型决定图片尺寸",
-		"tooManyImagesSelected": "选择图片过多",
-		"onlyAddedImages": "由于数量限制，仅添加了所选{{selected}}张图片中的{{added}}张",
-		"modelChanged": "模型已切换",
-		"textToImageOnlyModel": "当前模型仅支持文生图，已清除上传的图片",
-		"generateImage": "生成图片",
-		"chatHistory": "创作历史",
-		"noChats": "暂无创作记录",
-		"chatWith": "开始创作",
-		"imageGenerated": "图片生成成功",
-		"thinking": "AI思考中...",
-		"generating": "生成图片中...",
-		"selectModel": "选择AI模型",
-		"welcomeMessage": "描述您想要创建的图片！让您的想象力尽情发挥。",
-		"generatedImage": "生成的图片",
-		"userImage": "上传的图片",
-		"generatedOrUploaded": "生成或上传的图片",
-		"ai": "AI",
-		"clickToEnlarge": "点击放大图片",
-		"actions": {
-			"copy": "复制",
-			"download": "下载",
-			"delete": "删除"
-		},
-		"error": {
-			"title": "错误",
-			"default": "发送消息时发生错误",
-			"createChat": "创建对话失败 - 没有可用的AI模型",
-			"noModel": "没有可用的AI模型 - 请先配置提供商",
-			"createNewChat": "创建新对话失败 - 请选择提供商和模型"
-		},
-		"generation": {
-			"failed": "生成失败",
-			"configError": "提供商配置有误",
-			"configErrorDesc": "请检查您的提供商设置后重试",
-			"apiError": "API请求失败",
-			"apiErrorDesc": "服务暂时不可用，请稍后重试",
-			"timeoutError": "请求超时",
-			"timeoutErrorDesc": "请求时间过长，请重试",
-			"tooManyRequests": "请求过于频繁",
-			"tooManyRequestsDesc": "您的请求次数过多，请稍后再试",
-			"promptFlagged": "提示词违规",
-			"promptFlaggedDesc": "提示词违反内容政策，请修改后重试",
-			"inputImageFlagged": "图片违规",
-			"inputImageFlaggedDesc": "图片违反内容政策，请更换后重试",
-			"unknownError": "未知错误",
-			"unknownErrorDesc": "发生了意外错误，请重试",
-			"goToSettings": "前往设置",
-			"retry": "重试"
-		}
-	},
-	"navigation": {
-		"chat": "对话",
-		"settings": "设置"
-	},
-	"settings": {
-		"title": "设置",
-		"description": "管理你的应用偏好",
-		"language": "语言",
-		"theme": "主题",
-		"themeColor": "主题色",
-		"themeColorDescription": "自定义应用的主色调",
-		"model": "AI模型",
-		"general": "通用",
-		"appearance": "外观",
-		"advanced": "高级",
-		"selectLanguage": "选择语言",
-		"sections": {
-			"common": "通用设置",
-			"provider": "AI提供商"
-		},
-		"provider": {
-			"title": "AI 提供商",
-			"description": "管理你的AI服务配置",
-			"selectOption": "请选择一个选项",
-			"selectPlaceholder": "请选择...",
-			"settingsSaved": "设置已保存",
-			"saveFailed": "保存失败",
-			"saveError": "保存配置时发生错误",
-			"enabled": "已启用",
-			"disabled": "未启用",
-			"selectProvider": "选择提供商",
-			"selectProviderDescription": "请从左侧列表中选择一个AI提供商来配置其设置",
-			"configureToStart": "配置AI提供商以开始使用服务"
-		},
-		"validation": {
-			"required": "此字段为必填项",
-			"selectOption": "请选择一个选项",
-			"validUrl": "请输入有效的URL",
-			"validNumber": "请输入有效的数字",
-			"minValue": "最小值为 {{min}}",
-			"maxValue": "最大值为 {{max}}"
-		}
-	},
-	"auth": {
-		"welcomeBack": "欢迎回来",
-		"createAccount": "创建账户",
-		"loginDescription": "登录您的账户以继续使用",
-		"registerDescription": "注册新账户开始您的创作之旅",
-		"username": "用户名",
-		"email": "邮箱",
-		"password": "密码",
-		"enterUsername": "请输入用户名",
-		"enterEmail": "请输入邮箱地址",
-		"enterPassword": "请输入密码",
-		"login": "登录",
-		"register": "注册",
-		"processing": "处理中...",
-		"loginFailed": "登录失败",
-		"registerFailed": "注册失败",
-		"networkError": "网络错误，请稍后重试",
-		"or": "或者",
-		"noAccount": "还没有账户？",
-		"hasAccount": "已经有账户了？",
-		"signUpNow": "立即注册",
-		"goToLogin": "去登录",
-		"welcomeMessage": "欢迎使用",
-		"loginToSave": "登录以保存您的创作记录",
-		"continueWithGoogle": "使用 Google 继续",
-		"continueWithGithub": "使用 GitHub 继续",
-		"tryGoogleOneTap": "尝试 Google 一键登录",
-		"socialLoginFailed": "社交登录失败",
-		"googleOneTapFailed": "Google 一键登录失败",
-		"verifyEmail": "验证邮箱",
-		"otpDescription": "我们已向 {{email}} 发送了验证码，请在下方输入验证码。",
-		"otpInstructions": "请输入发送到您电子邮件的验证码",
-		"verificationCode": "验证码",
-		"enterVerificationCode": "请输入6位验证码",
-		"verifyCode": "验证",
-		"didntReceiveCode": "没有收到验证码？",
-		"resendCode": "重新发送",
-		"otpVerificationFailed": "验证码验证失败",
-		"otpVerificationError": "验证码验证错误",
-		"otpResendFailed": "重新发送验证码失败",
-		"otpResendError": "重新发送验证码错误",
-		"invalidVerificationCode": "验证码无效",
-		"verificationCodeExpired": "验证码已过期",
-		"tooManyAttempts": "尝试次数过多，请稍后再试",
-		"invalidEmail": "邮箱地址无效",
-		"userNotFound": "用户不存在",
-		"invalidEmailOrPassword": "邮箱或密码错误",
-		"passwordTooShort": "密码过短",
-		"passwordTooLong": "密码过长",
-		"userAlreadyExists": "该邮箱地址已被注册"
-	},
-	"user": {
-		"avatar": "用户头像",
-		"nickname": "昵称",
-		"signOut": "注销",
-		"online": "在线",
-		"defaultName": "用户"
-	},
-	"theme": {
-		"auto": "自动",
-		"light": "浅色",
-		"dark": "深色",
-		"selectTheme": "选择主题",
-		"selectThemeColor": "选择主题色"
-	},
-	"language": {
-		"label": "简体中文",
-		"followSystem": "跟随系统"
-	},
-	"providers": {
-		"suchuang": {
-			"description": "由速创AI驱动的图像生成服务",
-			"settings": {
-				"apiKey": {
-					"title": "API密钥",
-					"description": "用于身份验证的速创AI API密钥",
-					"placeholder": "输入您的速创AI API密钥"
-				}
-			},
-			"models": {
-				"suchuang-ai": {
-					"description": "速创AI - 高质量AI图像生成，支持多种宽高比。"
-				}
-			}
-		},
-		"wavespeed": {
-			"description": "由WaveSpeed驱动的图像生成服务",
-			"settings": {
-				"apiKey": {
-					"title": "API密钥",
-					"description": "用于身份验证的WaveSpeed API密钥（wavespeed.ai/accesskey 获取）",
-					"placeholder": "输入您的WaveSpeed API密钥"
-				}
-			},
-			"models": {
-				"wavespeed-ai/z-image/turbo": {
-					"description": "Z-Image Turbo - WaveSpeed快速图像生成模型。"
-				}
-			}
-		}
-	}
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "loading": "加载中...",
+    "error": "错误",
+    "success": "成功",
+    "unknown": "未知",
+    "yesterday": "昨天",
+    "daysAgo": "天前"
+  },
+  "app": {
+    "initializing": "初始化中",
+    "initializationFailed": "初始化失败",
+    "retry": "重试"
+  },
+  "chat": {
+    "newChat": "新建创作",
+    "newChatTitle": "新创作",
+    "typeMessage": "输入生成图片，按 Enter 发送 • Shift+Enter 换行",
+    "sendMessage": "发送消息",
+    "uploadForImageToImage": "上传图片进行图生图",
+    "textToImageModelNoUpload": "当前模型仅支持文生图",
+    "maxImagesReached": "已达到最大图片数量",
+    "imageCount": "生成图片数量",
+    "aspectRatio": "图片尺寸",
+    "auto": "自动",
+    "autoAspectRatio": "由模型决定图片尺寸",
+    "tooManyImagesSelected": "选择图片过多",
+    "onlyAddedImages": "由于数量限制，仅添加了所选{{selected}}张图片中的{{added}}张",
+    "modelChanged": "模型已切换",
+    "textToImageOnlyModel": "当前模型仅支持文生图，已清除上传的图片",
+    "generateImage": "生成图片",
+    "chatHistory": "创作历史",
+    "noChats": "暂无创作记录",
+    "chatWith": "开始创作",
+    "imageGenerated": "图片生成成功",
+    "thinking": "AI思考中...",
+    "generating": "生成图片中...",
+    "selectModel": "选择AI模型",
+    "welcomeMessage": "描述您想要创建的图片！让您的想象力尽情发挥。",
+    "generatedImage": "生成的图片",
+    "userImage": "上传的图片",
+    "generatedOrUploaded": "生成或上传的图片",
+    "ai": "AI",
+    "clickToEnlarge": "点击放大图片",
+    "actions": {
+      "copy": "复制",
+      "download": "下载",
+      "delete": "删除"
+    },
+    "error": {
+      "title": "错误",
+      "default": "发送消息时发生错误",
+      "createChat": "创建对话失败 - 没有可用的AI模型",
+      "noModel": "没有可用的AI模型 - 请先配置提供商",
+      "createNewChat": "创建新对话失败 - 请选择提供商和模型"
+    },
+    "generation": {
+      "failed": "生成失败",
+      "configError": "提供商配置有误",
+      "configErrorDesc": "请检查您的提供商设置后重试",
+      "apiError": "API请求失败",
+      "apiErrorDesc": "服务暂时不可用，请稍后重试",
+      "timeoutError": "请求超时",
+      "timeoutErrorDesc": "请求时间过长，请重试",
+      "tooManyRequests": "请求过于频繁",
+      "tooManyRequestsDesc": "您的请求次数过多，请稍后再试",
+      "promptFlagged": "提示词违规",
+      "promptFlaggedDesc": "提示词违反内容政策，请修改后重试",
+      "inputImageFlagged": "图片违规",
+      "inputImageFlaggedDesc": "图片违反内容政策，请更换后重试",
+      "unknownError": "未知错误",
+      "unknownErrorDesc": "发生了意外错误，请重试",
+      "goToSettings": "前往设置",
+      "retry": "重试"
+    }
+  },
+  "navigation": {
+    "chat": "对话",
+    "settings": "设置"
+  },
+  "settings": {
+    "title": "设置",
+    "description": "管理你的应用偏好",
+    "language": "语言",
+    "theme": "主题",
+    "themeColor": "主题色",
+    "themeColorDescription": "自定义应用的主色调",
+    "model": "AI模型",
+    "general": "通用",
+    "appearance": "外观",
+    "advanced": "高级",
+    "selectLanguage": "选择语言",
+    "sections": {
+      "common": "通用设置",
+      "provider": "AI提供商"
+    },
+    "provider": {
+      "title": "AI 提供商",
+      "description": "管理你的AI服务配置",
+      "selectOption": "请选择一个选项",
+      "selectPlaceholder": "请选择...",
+      "settingsSaved": "设置已保存",
+      "saveFailed": "保存失败",
+      "saveError": "保存配置时发生错误",
+      "enabled": "已启用",
+      "disabled": "未启用",
+      "selectProvider": "选择提供商",
+      "selectProviderDescription": "请从左侧列表中选择一个AI提供商来配置其设置",
+      "configureToStart": "配置AI提供商以开始使用服务"
+    },
+    "validation": {
+      "required": "此字段为必填项",
+      "selectOption": "请选择一个选项",
+      "validUrl": "请输入有效的URL",
+      "validNumber": "请输入有效的数字",
+      "minValue": "最小值为 {{min}}",
+      "maxValue": "最大值为 {{max}}"
+    }
+  },
+  "auth": {
+    "welcomeBack": "欢迎回来",
+    "createAccount": "创建账户",
+    "loginDescription": "登录您的账户以继续使用",
+    "registerDescription": "注册新账户开始您的创作之旅",
+    "username": "用户名",
+    "email": "邮箱",
+    "password": "密码",
+    "enterUsername": "请输入用户名",
+    "enterEmail": "请输入邮箱地址",
+    "enterPassword": "请输入密码",
+    "login": "登录",
+    "register": "注册",
+    "processing": "处理中...",
+    "loginFailed": "登录失败",
+    "registerFailed": "注册失败",
+    "networkError": "网络错误，请稍后重试",
+    "or": "或者",
+    "noAccount": "还没有账户？",
+    "hasAccount": "已经有账户了？",
+    "signUpNow": "立即注册",
+    "goToLogin": "去登录",
+    "welcomeMessage": "欢迎使用",
+    "loginToSave": "登录以保存您的创作记录",
+    "continueWithGoogle": "使用 Google 继续",
+    "continueWithGithub": "使用 GitHub 继续",
+    "tryGoogleOneTap": "尝试 Google 一键登录",
+    "socialLoginFailed": "社交登录失败",
+    "googleOneTapFailed": "Google 一键登录失败",
+    "verifyEmail": "验证邮箱",
+    "otpDescription": "我们已向 {{email}} 发送了验证码，请在下方输入验证码。",
+    "otpInstructions": "请输入发送到您电子邮件的验证码",
+    "verificationCode": "验证码",
+    "enterVerificationCode": "请输入6位验证码",
+    "verifyCode": "验证",
+    "didntReceiveCode": "没有收到验证码？",
+    "resendCode": "重新发送",
+    "otpVerificationFailed": "验证码验证失败",
+    "otpVerificationError": "验证码验证错误",
+    "otpResendFailed": "重新发送验证码失败",
+    "otpResendError": "重新发送验证码错误",
+    "invalidVerificationCode": "验证码无效",
+    "verificationCodeExpired": "验证码已过期",
+    "tooManyAttempts": "尝试次数过多，请稍后再试",
+    "invalidEmail": "邮箱地址无效",
+    "userNotFound": "用户不存在",
+    "invalidEmailOrPassword": "邮箱或密码错误",
+    "passwordTooShort": "密码过短",
+    "passwordTooLong": "密码过长",
+    "userAlreadyExists": "该邮箱地址已被注册",
+    "inviteCode": "邀请码",
+    "enterInviteCode": "请输入邀请码",
+    "invalidInviteCode": "邀请码无效"
+  },
+  "user": {
+    "avatar": "用户头像",
+    "nickname": "昵称",
+    "signOut": "注销",
+    "online": "在线",
+    "defaultName": "用户"
+  },
+  "theme": {
+    "auto": "自动",
+    "light": "浅色",
+    "dark": "深色",
+    "selectTheme": "选择主题",
+    "selectThemeColor": "选择主题色"
+  },
+  "language": {
+    "label": "简体中文",
+    "followSystem": "跟随系统"
+  },
+  "providers": {
+    "suchuang": {
+      "description": "由速创AI驱动的图像生成服务",
+      "settings": {
+        "apiKey": {
+          "title": "API密钥",
+          "description": "用于身份验证的速创AI API密钥",
+          "placeholder": "输入您的速创AI API密钥"
+        }
+      },
+      "models": {
+        "suchuang-ai": {
+          "description": "速创AI - 高质量AI图像生成，支持多种宽高比。"
+        }
+      }
+    },
+    "wavespeed": {
+      "description": "由WaveSpeed驱动的图像生成服务",
+      "settings": {
+        "apiKey": {
+          "title": "API密钥",
+          "description": "用于身份验证的WaveSpeed API密钥（wavespeed.ai/accesskey 获取）",
+          "placeholder": "输入您的WaveSpeed API密钥"
+        }
+      },
+      "models": {
+        "wavespeed-ai/z-image/turbo": {
+          "description": "Z-Image Turbo - WaveSpeed快速图像生成模型。"
+        }
+      }
+    }
+  }
 }

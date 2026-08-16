@@ -62,12 +62,11 @@ pnpm install
 npx wrangler login
 ```
 
-4. **Set backend secrets** (JWT is required; provider API keys are optional — see below)
+4. **Set backend secrets** (JWT is required; INVITE_CODE is optional but recommended for gating sign-ups)
 
 ```bash
 npx wrangler secret put JWT_SECRET --config worker/wrangler.toml --env production
-# npx wrangler secret put SUCHUANG_API_KEY --config worker/wrangler.toml --env production
-# npx wrangler secret put WAVESPEED_API_KEY --config worker/wrangler.toml --env production
+npx wrangler secret put INVITE_CODE --config worker/wrangler.toml --env production
 ```
 
 5. **Run database migration**
@@ -89,10 +88,10 @@ cp .env.production.example .env.production   # set VITE_WORKER_URL to your Worke
 pnpm deploy:frontend
 ```
 
-### Connecting image-generation services (API keys)
+### Security & abuse protection
 
-- **Server-side keys (optional)**: set `SUCHUANG_API_KEY` / `WAVESPEED_API_KEY` via `wrangler secret put`; the frontend works without any configuration.
-- **Per-user keys via the settings page (recommended, never hardcoded)**: after logging in, go to "Settings → AI Providers", enable a provider and enter its API key. The key stays in browser local storage and is passed to the backend with each generation request — it is never committed to the repository.
+- **Invite-code signup**: when the `INVITE_CODE` environment variable is set, registration requires a matching invite code (disabled when unset).
+- **Bring-your-own API key**: AI provider API keys are entered per-user in "Settings → AI Providers", stored in browser local storage, and forwarded to the backend with each generation request. The server never stores provider keys, so nobody can burn your quota.
 
 ### Static File Hosting (frontend only, using remote API)
 

@@ -79,10 +79,9 @@ npx wrangler login
 
 # 4. 将 D1 database_id 填入 worker/wrangler.toml（顶层和 [env.production] 两处）
 
-# 5. 设置后端密钥（JWT 必填；provider API key 可选，见下）
+# 5. 设置后端密钥
 npx wrangler secret put JWT_SECRET --config worker/wrangler.toml --env production
-# npx wrangler secret put SUCHUANG_API_KEY --config worker/wrangler.toml --env production
-# npx wrangler secret put WAVESPEED_API_KEY --config worker/wrangler.toml --env production
+npx wrangler secret put INVITE_CODE --config worker/wrangler.toml --env production
 
 # 6. 数据库迁移
 pnpm db:migrate
@@ -95,10 +94,10 @@ cp .env.production.example .env.production   # 将 VITE_WORKER_URL 改成你的 
 pnpm deploy:frontend
 ```
 
-### 接入生图服务（API Key 两种方式）
+### 安全与防盗刷
 
-- **服务端密钥（可选）**：通过 `wrangler secret put` 设置 `SUCHUANG_API_KEY` / `WAVESPEED_API_KEY`，前端无需配置即生效。
-- **前端设置页（推荐，不入代码）**：登录后在「设置 → AI 提供商」中开启对应提供商并填写 API Key，密钥保存在浏览器本地，随生成请求透传给后端，不会硬编码进仓库。
+- **邀请码注册**：设置 `INVITE_CODE` 环境变量后，注册必须填写正确的邀请码，未配置则放开注册。
+- **用户自带 API Key**：AI 提供商 API Key 由用户在前端「设置 → AI 提供商」中填写，保存在浏览器本地，随生成请求透传给后端。服务端不保存任何 provider 密钥，避免被人盗刷额度。
 
 ## 开发
 
